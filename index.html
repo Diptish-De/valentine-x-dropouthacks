@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spider-Verse FLAMES Test 🕸️🔥 | DropoutHacks</title>
+    <meta name="description"
+        content="Validate your multiverse relationship with the ultimate FLAMES test. A DropoutHacks Valentine's Day experience." />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bangers&family=Permanent+Marker&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet" />
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        paper: '#f4f1ea',
+                        ink: '#0f0f0f',
+                        miles: '#ff3d5e', // distinct, flat red
+                        gwen: '#00d2ff',  // distinct, flat cyan
+                        yellow: '#ffe600',
+                        punk: '#7d5fff',
+                        boom: '#ff9f43',
+                    },
+                    fontFamily: {
+                        bangers: ['Bangers', 'cursive'],
+                        marker: ['Permanent Marker', 'cursive'],
+                        mono: ['Space Mono', 'monospace'],
+                    },
+                    boxShadow: {
+                        comic: '8px 8px 0px #0f0f0f',
+                        'comic-sm': '4px 4px 0px #0f0f0f',
+                        'comic-hover': '12px 12px 0px #0f0f0f',
+                    },
+                    animation: {
+                        'bounce-slow': 'bounce 3s infinite',
+                        'spin-slow': 'spin 12s linear infinite',
+                        'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    backgroundImage: {
+                        'comic-dots': "radial-gradient(#0f0f0f 1.5px, transparent 1.5px)",
+                        'comic-lines': "repeating-linear-gradient(45deg, #0f0f0f 0, #0f0f0f 1px, transparent 0, transparent 50%)"
+                    }
+                },
+            },
+        };
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f4f1ea;
+            background-image:
+                radial-gradient(#0f0f0f 1px, transparent 1px),
+                radial-gradient(#0f0f0f 1px, transparent 1px);
+            background-position: 0 0, 25px 25px;
+            background-size: 50px 50px;
+            color: #0f0f0f;
+            font-family: 'Space Mono', monospace;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* ===== BACKGROUND DECORATIONS ===== */
+        .bg-shape {
+            position: fixed;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .shape-triangle {
+            width: 0;
+            height: 0;
+            border-left: 100px solid transparent;
+            border-right: 100px solid transparent;
+            border-bottom: 200px solid rgba(255, 61, 94, 0.1);
+            /* Miles red */
+            transform: rotate(45deg);
+        }
+
+        .shape-circle {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgba(0, 210, 255, 0.1);
+            /* Gwen cyan */
+            filter: blur(40px);
+        }
+
+        /* ===== COMIC PANEL CONTAINER ===== */
+        .comic-panel {
+            background: #fff;
+            border: 4px solid #0f0f0f;
+            padding: 0;
+            /* Removing padding from container to use inner layout */
+            position: relative;
+            box-shadow: 12px 12px 0 #0f0f0f;
+            transition: transform 0.2s ease;
+            /* FIXED: removed overflow: hidden so tape can pop out */
+            /* overflow: visible usually default, explicitly setting it here */
+            overflow: visible;
+        }
+
+        /* Background grid inside panel - masked by pseudo relative container */
+        .comic-panel-bg {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+            /* This keeps bg inside */
+        }
+
+        /* Inner jagged border */
+        .jagged-border {
+            position: absolute;
+            inset: 10px;
+            border: 2px dashed #0f0f0f;
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ===== TAPE STRIPS ===== */
+        .tape {
+            position: absolute;
+            width: 140px;
+            height: 40px;
+            background: #ffe600;
+            border: 3px solid #0f0f0f;
+            z-index: 50;
+            /* Ensure high z-index */
+            transform: rotate(-2deg);
+            top: -22px;
+            /* Lift it up over border */
+            left: 50%;
+            margin-left: -70px;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tape::after {
+            content: 'CLASSIFIED';
+            font-family: 'Bangers', cursive;
+            font-size: 1.2rem;
+            color: #0f0f0f;
+            letter-spacing: 2px;
+        }
+
+        /* ===== INPUT FIELDS (Rough Sketch Style) ===== */
+        .comic-input-container {
+            position: relative;
+        }
+
+        /* Shadow block behind input */
+        .comic-input-shadow {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 100%;
+            height: 100%;
+            background: #0f0f0f;
+            z-index: 0;
+            transition: all 0.2s ease;
+        }
+
+        .comic-input {
+            position: relative;
+            z-index: 1;
+            background: #fff;
+            border: 3px solid #0f0f0f;
+            color: #0f0f0f;
+            font-family: 'Permanent Marker', cursive;
+            font-size: 1.3rem;
+            /* Slightly smaller input text */
+            padding: 10px 16px;
+            width: 100%;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .comic-input:focus {
+            transform: translate(-2px, -2px);
+        }
+
+        .comic-input:focus+.comic-input-shadow {
+            transform: translate(2px, 2px);
+        }
+
+        .comic-input::placeholder {
+            color: #ccc;
+            font-family: 'Bangers', cursive;
+            font-size: 1.1rem;
+            opacity: 0.6;
+        }
+
+        /* ===== ACTION BUTTON ===== */
+        .btn-comic {
+            background: #ff3d5e;
+            border: 3px solid #0f0f0f;
+            color: #fff;
+            font-family: 'Bangers', cursive;
+            font-size: 1.6rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 12px 30px;
+            cursor: pointer;
+            box-shadow: 6px 6px 0 #0f0f0f;
+            transition: all 0.1s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .btn-comic:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0 #0f0f0f;
+            background: #ff1f45;
+        }
+
+        .btn-comic:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 #0f0f0f;
+        }
+
+        /* Button shine */
+        .btn-comic::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-comic:hover::before {
+            left: 100%;
+        }
+
+        /* ===== FLAMES LETTERS ===== */
+        .flames-letter {
+            font-family: 'Bangers', cursive;
+            font-size: 3rem;
+            color: #e0e0e0;
+            text-shadow: 2px 2px 0 #0f0f0f;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin: 0 3px;
+            position: relative;
+            -webkit-text-stroke: 1.5px #0f0f0f;
+        }
+
+        /* Animation States */
+        .counting-highlight {
+            color: #ff3d5e;
+            transform: scale(1.3) translateY(-8px);
+            text-shadow: 4px 4px 0 #0f0f0f;
+            z-index: 10;
+        }
+
+        .eliminated {
+            color: #d1d5db;
+            opacity: 0.4;
+            transform: scale(0.9);
+            text-decoration: none;
+        }
+
+        .eliminated::after {
+            content: '❌';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3.5rem;
+            opacity: 0.6;
+            color: #0f0f0f;
+        }
+
+        .survivor {
+            transform: scale(1.4) rotate(-5deg);
+            text-shadow: 5px 5px 0 #0f0f0f;
+            color: #ff3d5e;
+            z-index: 20;
+        }
+
+        /* ===== RESULT STAMPS ===== */
+        .stamp {
+            font-family: 'Permanent Marker', cursive;
+            border: 5px solid;
+            padding: 8px 30px;
+            text-transform: uppercase;
+            font-size: 2.5rem;
+            transform: rotate(-8deg);
+            display: inline-block;
+            opacity: 0;
+            animation: stampIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            background: #fff;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes stampIn {
+            from {
+                transform: scale(3) rotate(15deg);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1) rotate(-8deg);
+                opacity: 1;
+            }
+        }
+
+        .stamp-friends {
+            color: #ffe600;
+            border-color: #ffe600;
+        }
+
+        .stamp-lovers {
+            color: #ff3d5e;
+            border-color: #ff3d5e;
+        }
+
+        .stamp-affection {
+            color: #fd79a8;
+            border-color: #fd79a8;
+        }
+
+        .stamp-marriage {
+            color: #00d2ff;
+            border-color: #00d2ff;
+        }
+
+        .stamp-enemies {
+            color: #0f0f0f;
+            border-color: #0f0f0f;
+        }
+
+        .stamp-siblings {
+            color: #7d5fff;
+            border-color: #7d5fff;
+        }
+
+        /* ===== LETTER STRIKING ANIMATION ===== */
+        .letter-span {
+            position: relative;
+            display: inline-block;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .letter-strike {
+            color: #9ca3af;
+            opacity: 0.6;
+        }
+
+        .letter-strike::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -10%;
+            width: 0;
+            height: 4px;
+            background: #ff3d5e;
+            transform: rotate(-15deg);
+            border-radius: 99px;
+            opacity: 1;
+            animation: slash 0.3s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            box-shadow: 1px 1px 0 #0f0f0f;
+            border: 1px solid #0f0f0f;
+        }
+
+        @keyframes slash {
+            from {
+                width: 0;
+            }
+
+            to {
+                width: 120%;
+            }
+        }
+
+        /* ===== POP ART DOTS & DECOR ===== */
+        .corner-web {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.05;
+            background-image: repeating-radial-gradient(circle at 0 0, transparent 0, #0f0f0f 1px, transparent 2px, transparent 20px);
+        }
+
+        .top-left {
+            top: 0;
+            left: 0;
+        }
+
+        .bottom-right {
+            bottom: 0;
+            right: 0;
+            transform: rotate(180deg);
+        }
+
+        .sticker {
+            position: absolute;
+            pointer-events: none;
+            z-index: 10;
+            filter: drop-shadow(4px 4px 0 rgba(0, 0, 0, 0.2));
+        }
+
+        /* Speech Bubble for Tips */
+        .comic-bubble {
+            position: relative;
+            background: #fff;
+            border: 3px solid #0f0f0f;
+            border-radius: .4em;
+            padding: 12px;
+            margin-top: 8px;
+            box-shadow: 4px 4px 0 #0f0f0f;
+        }
+
+        .comic-bubble:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-bottom-color: #0f0f0f;
+            border-top: 0;
+            margin-left: -12px;
+            margin-top: -12px;
+        }
+
+        /* VS badge animation */
+        @keyframes vs-pulse {
+
+            0%,
+            100% {
+                transform: scale(1) rotate(12deg);
+            }
+
+            50% {
+                transform: scale(1.2) rotate(8deg);
+            }
+        }
+
+        .vs-badge {
+            animation: vs-pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+
+<body class="flex flex-col items-center justify-center p-4 min-h-screen">
+
+    <!-- BACKGROUND DECORATIONS -->
+    <div class="corner-web top-left"></div>
+    <div class="corner-web bottom-right"></div>
+
+    <div class="bg-shape shape-triangle -left-20 top-40 opacity-20"></div>
+    <div class="bg-shape shape-circle -right-20 bottom-40 opacity-20"></div>
+
+    <!-- Sticker Decorations -->
+    <div class="sticker hidden lg:block left-10 top-20 rotate-12 text-6xl opacity-20 font-bangers">POW!</div>
+    <div class="sticker hidden lg:block right-10 bottom-40 -rotate-12 text-6xl opacity-20 font-bangers">ZAP!</div>
+
+    <!-- MAIN CONTAINER: Reduced max-width (max-w-3xl) -->
+    <div class="w-full max-w-3xl relative z-10 transition-all duration-300">
+
+        <!-- HEADER -->
+        <div class="text-center mb-8 relative">
+            <div
+                class="bg-yellow inline-block px-5 py-2 border-4 border-black shadow-comic rotate-2 mb-2 hover:rotate-0 transition-transform cursor-default">
+                <h3 class="font-mono font-bold text-xs tracking-[0.3em] uppercase">Secret Identity Check</h3>
+            </div>
+            <h1 class="font-bangers text-6xl md:text-8xl text-miles drop-shadow-[5px_5px_0_#0f0f0f] leading-none tracking-wide text-white"
+                style="-webkit-text-stroke: 2.5px #0f0f0f;">
+                FLAMES TEST
+            </h1>
+            <p
+                class="font-marker text-xl md:text-2xl mt-4 text-gwen drop-shadow-[2px_2px_0_#0f0f0f] -rotate-1 bg-black/90 px-3 py-1 inline-block transform skew-x-[-10deg]">
+                <span class="transform skew-x-[10deg] inline-block">Are You Canon? 🕸️</span>
+            </p>
+        </div>
+
+        <!-- GAME PANEL: More compact, overflow visible -->
+        <div class="comic-panel mb-8 min-h-[400px] flex flex-col justify-center">
+            <div class="comic-panel-bg"></div>
+            <div class="jagged-border"></div>
+            <div class="tape"></div>
+
+            <!-- Input Section -->
+            <div id="input-section" class="w-full max-w-lg mx-auto py-8 px-6 relative z-10">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-end">
+                    <!-- Name 1 -->
+                    <div class="relative group">
+                        <label
+                            class="block font-bangers text-xl mb-1 ml-1 text-miles drop-shadow-[1.5px_1.5px_0_#0f0f0f]"
+                            style="-webkit-text-stroke: 1px #0f0f0f;">NAME 1 (YOU)</label>
+                        <div class="comic-input-container">
+                            <input type="text" id="name1" class="comic-input" placeholder="Miles" autocomplete="off">
+                            <div class="comic-input-shadow"></div>
+                        </div>
+                        <div
+                            class="absolute -right-6 -top-6 text-4xl hidden group-focus-within:block animate-bounce z-20 transition-all">
+                            🕷️</div>
+                    </div>
+
+                    <!-- Name 2 -->
+                    <div class="relative group">
+                        <label
+                            class="block font-bangers text-xl mb-1 ml-1 text-gwen drop-shadow-[1.5px_1.5px_0_#0f0f0f]"
+                            style="-webkit-text-stroke: 1px #0f0f0f;">NAME 2 (THEM)</label>
+                        <div class="comic-input-container">
+                            <input type="text" id="name2" class="comic-input" placeholder="Gwen" autocomplete="off">
+                            <div class="comic-input-shadow"></div>
+                        </div>
+                        <div
+                            class="absolute -left-6 -top-6 text-4xl hidden group-focus-within:block animate-bounce z-20 transition-all">
+                            🩰</div>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <button onclick="startCalculation()" class="btn-comic group px-6 py-3 text-xl">
+                        <span class="inline-block group-hover:scale-110 transition-transform">🔥 REVEAL DESTINY
+                            🔥</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Calculation / Result Section -->
+            <div id="calc-section" class="hidden flex flex-col w-full h-full py-6 px-4 relative z-10">
+
+                <!-- SPLIT NAMES DISPLAY -->
+                <div
+                    class="flex flex-col md:flex-row justify-between items-center md:items-start gap-4 mb-8 w-full border-b-4 border-black/10 pb-6 border-dashed">
+
+                    <!-- Name 1 (Left) -->
+                    <div class="text-center w-full md:w-5/12">
+                        <h3
+                            class="font-mono text-[10px] font-bold text-gray-500 mb-2 uppercase tracking-widest bg-paper inline-block px-2 py-1 border-2 border-black/10 rounded">
+                            Subject 1610</h3>
+                        <div id="display-name1"
+                            class="flex flex-wrap justify-center gap-1 font-bangers text-4xl md:text-5xl text-miles min-h-[50px]"
+                            style="text-shadow: 2px 2px 0 rgba(0,0,0,0.1)">
+                            <!-- Letters injected here -->
+                        </div>
+                    </div>
+
+                    <!-- VS Divider -->
+                    <div class="font-marker text-4xl text-yellow rotate-12 drop-shadow-[3px_3px_0_#0f0f0f] self-center vs-badge mx-2"
+                        style="-webkit-text-stroke: 2px #0f0f0f;">VS</div>
+
+                    <!-- Name 2 (Right) -->
+                    <div class="text-center w-full md:w-5/12">
+                        <h3
+                            class="font-mono text-[10px] font-bold text-gray-500 mb-2 uppercase tracking-widest bg-paper inline-block px-2 py-1 border-2 border-black/10 rounded">
+                            Subject 65</h3>
+                        <div id="display-name2"
+                            class="flex flex-wrap justify-center gap-1 font-bangers text-4xl md:text-5xl text-gwen min-h-[50px]"
+                            style="text-shadow: 2px 2px 0 rgba(0,0,0,0.1)">
+                            <!-- Letters injected here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FLAMES Display -->
+                <div class="flex-grow flex flex-col items-center justify-center w-full">
+
+                    <div id="flames-container" class="flex flex-wrap justify-center gap-2 md:gap-4 mb-6 select-none">
+                        <span id="f-letter" class="flames-letter">F</span>
+                        <span id="l-letter" class="flames-letter">L</span>
+                        <span id="a-letter" class="flames-letter">A</span>
+                        <span id="m-letter" class="flames-letter">M</span>
+                        <span id="e-letter" class="flames-letter">E</span>
+                        <span id="s-letter" class="flames-letter">S</span>
+                    </div>
+
+                    <!-- The Big Result -->
+                    <div id="final-result"
+                        class="min-h-[100px] flex items-center justify-center mb-4 relative w-full perspective-1000">
+                        <!-- Stamp injected here by JS -->
+                    </div>
+
+                    <div id="result-desc-container"
+                        class="opacity-0 transition-opacity duration-1000 max-w-sm w-full mx-auto relative group">
+                        <div class="comic-bubble text-center">
+                            <p id="result-desc" class="font-mono font-bold text-sm md:text-base">
+                                Calculation pending...
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6">
+                        <button id="reset-btn" onclick="resetGame()"
+                            class="hidden font-bangers text-lg text-gray-400 hover:text-miles transition-colors border-b-2 border-transparent hover:border-miles transform hover:-rotate-2">
+                            Try Another Timeline ↺
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="text-center font-mono text-xs opacity-60">
+            <p>BUILT FOR THE MULTIVERSE BY <span class="font-bold">DROPOUT HACKS</span></p>
+        </div>
+
+    </div>
+
+    <script>
+        /* =========================================
+           FLAMES LOGIC & DATA
+           ========================================= */
+        const FLAMES_MAP = {
+            'F': { word: 'FRIENDS', desc: 'Just homies. Like Miles and Ganke. 🎮 Best buds across the multiverse.', class: 'stamp-friends' },
+            'L': { word: 'LOVERS', desc: 'True canon event. Miles & Gwen energy. 💕 Destined to be together!', class: 'stamp-lovers' },
+            'A': { word: 'AFFECTION', desc: 'They like you! Maybe ask them to swing by? 😉 There\'s a spark there.', class: 'stamp-affection' },
+            'M': { word: 'MARRIAGE', desc: 'Put a ring on it. Peter B. Parker style. 💍 Happily ever after!', class: 'stamp-marriage' },
+            'E': { word: 'ENEMIES', desc: 'The Spot level hate. Watch your back! 🕳️ Careful in the collider.', class: 'stamp-enemies' },
+            'S': { word: 'SIBLINGS', desc: 'Oof. Brother/Sister zone. 💀 Strictly family vibes.', class: 'stamp-siblings' }
+        };
+
+        // Original Chars
+        const FLAMES_CHARS = ['F', 'L', 'A', 'M', 'E', 'S'];
+
+        /* =========================================
+           GAME STATE
+           ========================================= */
+        function startCalculation() {
+            const n1Input = document.getElementById('name1').value.trim();
+            const n2Input = document.getElementById('name2').value.trim();
+
+            if (!n1Input || !n2Input) {
+                alert("Enter both names, web-head! 🕸️");
+                return;
+            }
+
+            // Switch views
+            document.getElementById('input-section').classList.add('hidden');
+            document.getElementById('calc-section').classList.remove('hidden');
+
+            // Setup letters (Keep only alphabets)
+            const n1CleanChars = n1Input.replace(/[^a-zA-Z]/g, '').toLowerCase().split('');
+            const n2CleanChars = n2Input.replace(/[^a-zA-Z]/g, '').toLowerCase().split('');
+
+            const d1 = document.getElementById('display-name1');
+            const d2 = document.getElementById('display-name2');
+            d1.innerHTML = '';
+            d2.innerHTML = '';
+
+            const n1Obj = n1CleanChars.map((c, i) => ({ char: c, id: `n1-${i}`, struck: false }));
+            const n2Obj = n2CleanChars.map((c, i) => ({ char: c, id: `n2-${i}`, struck: false }));
+
+            n1Obj.forEach(o => d1.innerHTML += `<span id="${o.id}" class="letter-span">${o.char.toUpperCase()}</span>`);
+            n2Obj.forEach(o => d2.innerHTML += `<span id="${o.id}" class="letter-span">${o.char.toUpperCase()}</span>`);
+
+            // Start Sequence
+            setTimeout(() => animateStriking(n1Obj, n2Obj), 600);
+        }
+
+        /* =========================================
+           STEP 1: STRIKE MATCHING LETTERS
+           ========================================= */
+        function animateStriking(n1, n2) {
+            let matches = [];
+            // Find matches sequentially
+
+            let tempN2 = JSON.parse(JSON.stringify(n2)); // Deep copy for logic
+
+            n1.forEach((item1, idx1) => {
+                const char = item1.char;
+                const matchIndex = tempN2.findIndex(x => x.char === char && !x.struck);
+
+                if (matchIndex !== -1) {
+                    // Found a match
+                    matches.push({
+                        n1Id: item1.id,
+                        n2Id: tempN2[matchIndex].id,
+                        char: char
+                    });
+                    // Mark as struck in our logic tracker
+                    tempN2[matchIndex].struck = true;
+                }
+            });
+
+            if (matches.length === 0) {
+                // No matches at all
+                startFlamesCounting(n1.length + n2.length);
+                return;
+            }
+
+            // Animate striking one by one
+            let delay = 0;
+            const stepDelay = 600; // Time between strikes
+
+            matches.forEach((m, idx) => {
+                setTimeout(() => {
+                    document.getElementById(m.n1Id).classList.add('letter-strike');
+                    document.getElementById(m.n2Id).classList.add('letter-strike');
+                }, delay);
+                delay += stepDelay;
+            });
+
+            // Proceed to counting phase
+            setTimeout(() => {
+                const remainingCount = (n1.length + n2.length) - (matches.length * 2);
+                startFlamesCounting(remainingCount);
+            }, delay + 800);
+        }
+
+        /* =========================================
+           STEP 2: COUNT FLAMES
+           ========================================= */
+        function startFlamesCounting(count) {
+            if (count === 0) {
+                showResult('F');
+                return;
+            }
+
+            let activeIndices = [0, 1, 2, 3, 4, 5];
+
+            // Recursive animation function
+            animateEliminationRound(activeIndices, count, 0);
+        }
+
+        function animateEliminationRound(activeIndices, count, startPtr) {
+            if (activeIndices.length === 1) {
+                // One left!
+                const winnerIndex = activeIndices[0];
+                showResult(FLAMES_CHARS[winnerIndex]);
+                return;
+            }
+
+            // Animation logic
+            let currentStep = 0;
+            let logicalPtr = startPtr; // pointer into activeIndices array
+
+            function tick() {
+                // Find which DOM element we are currently "pointing" at
+                const targetDomIndex = activeIndices[logicalPtr];
+                const letterChar = FLAMES_CHARS[targetDomIndex].toLowerCase();
+
+                // Clear all highlights first
+                document.querySelectorAll('.flames-letter').forEach(el => el.classList.remove('counting-highlight'));
+
+                // Highlight current
+                const el = document.getElementById(letterChar + '-letter');
+                el.classList.add('counting-highlight');
+
+                // Increment logic
+                currentStep++;
+
+                if (currentStep < count) {
+                    // Prepare next step
+                    logicalPtr = (logicalPtr + 1) % activeIndices.length;
+                    setTimeout(tick, 200); // 200ms per tick
+                } else {
+                    // Finished blocking out 'count' steps.
+                    setTimeout(() => {
+                        el.classList.remove('counting-highlight');
+                        el.classList.add('eliminated'); // Grey out styling
+
+                        // Remove from our active list
+                        activeIndices.splice(logicalPtr, 1);
+
+                        const nextStartPtr = logicalPtr % activeIndices.length;
+
+                        setTimeout(() => {
+                            animateEliminationRound(activeIndices, count, nextStartPtr);
+                        }, 400);
+
+                    }, 300);
+                }
+            }
+
+            tick();
+        }
+
+        /* =========================================
+           STEP 3: SHOW RESULTS
+           ========================================= */
+        function showResult(char) {
+            const data = FLAMES_MAP[char];
+
+            // Highlight winner styling
+            const el = document.getElementById(char.toLowerCase() + '-letter');
+            el.classList.remove('eliminated');
+            el.classList.add('survivor');
+
+            const stampHtml = `<div class="stamp ${data.class}">${data.word}</div>`;
+            document.getElementById('final-result').innerHTML = stampHtml;
+
+            document.getElementById('result-desc').textContent = data.desc;
+            document.getElementById('result-desc-container').classList.remove('opacity-0');
+            document.getElementById('reset-btn').classList.remove('hidden');
+        }
+
+        /* =========================================
+           RESET
+           ========================================= */
+        function resetGame() {
+            document.getElementById('input-section').classList.remove('hidden');
+            document.getElementById('calc-section').classList.add('hidden');
+
+            document.getElementById('name1').value = '';
+            document.getElementById('name2').value = '';
+            document.getElementById('final-result').innerHTML = '';
+            document.getElementById('result-desc-container').classList.add('opacity-0');
+            document.getElementById('reset-btn').classList.add('hidden');
+
+            // Reset letter styles
+            document.querySelectorAll('.flames-letter').forEach(el => {
+                el.className = 'flames-letter';
+                el.classList.remove('active', 'survivor', 'eliminated', 'counting-highlight');
+            });
+        }
+
+    </script>
+</body>
+
+</html>
