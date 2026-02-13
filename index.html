@@ -663,6 +663,23 @@
                 clip-path: inset(5% 0 80% 0);
             }
         }
+
+
+        .text-stroke-black {
+            -webkit-text-stroke: 3px #000;
+        }
+
+        .text-stroke-white {
+            -webkit-text-stroke: 3px #fff;
+        }
+
+        .text-shadow-comic {
+            text-shadow: 6px 6px 0 #000;
+        }
+
+        .text-shadow-neon {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 61, 94, 0.5);
+        }
     </style>
 </head>
 
@@ -694,7 +711,7 @@
             </h1>
             <p
                 class="font-marker text-xl md:text-2xl mt-4 text-gwen drop-shadow-[2px_2px_0_#0f0f0f] -rotate-1 bg-black/90 px-3 py-1 inline-block transform skew-x-[-10deg]">
-                <span class="transform skew-x-[10deg] inline-block">Are You Canon? 🕸️</span>
+                <span class="transform skew-x-[10deg] inline-block">Are You Canon? (v2) 🕸️</span>
             </p>
         </div>
 
@@ -829,146 +846,139 @@
 
                 <!-- HIDDEN SHARE CARD (For HTML2Canvas) -->
                 <div id="share-card"
-                    class="fixed top-0 left-[-9999px] w-[1080px] h-[1920px] z-[-10] pointer-events-none flex flex-col bg-[#050505] overflow-hidden text-white"
+                    class="fixed top-0 left-[-9999px] w-[1080px] h-[1920px] z-[-10] pointer-events-none flex flex-col bg-[#f4f1ea] overflow-hidden text-black"
                     style="font-family: 'Space Mono', monospace;">
 
-                    <!-- Background Texture -->
-                    <div class="absolute inset-0 z-0 opacity-20"
-                        style="background-image: radial-gradient(#ff3d5e 1.5px, transparent 1.5px); background-size: 30px 30px;">
+                    <!-- COMIC BACKGROUND PATTERN -->
+                    <div class="absolute inset-0 z-0 opacity-10"
+                        style="background-image: radial-gradient(#ff3d5e 2px, transparent 2px), radial-gradient(#00d2ff 2px, transparent 2px); background-size: 40px 40px; background-position: 0 0, 20px 20px;">
                     </div>
 
-                    <!-- Romantic Glows -->
-                    <div class="absolute inset-0 z-0 flex pointer-events-none">
-                        <div class="w-full h-full bg-miles mix-blend-screen opacity-10 blur-[150px] animate-pulse-slow">
-                        </div>
+                    <!-- HUGE COMIC HALFTONE CIRCLE -->
+                    <div
+                        class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[1200px] rounded-full bg-yellow opacity-10 blur-3xl z-0">
                     </div>
 
-                    <!-- Decorative Hearts -->
+                    <!-- Spider-Webs in Corners -->
+                    <div class="absolute top-0 left-0 w-[500px] h-[500px] opacity-10 pointer-events-none"
+                        style="background: repeating-radial-gradient(circle at 0 0, transparent 0, #000 2px, transparent 4px, transparent 40px);">
+                    </div>
+                    <div class="absolute bottom-0 right-0 w-[500px] h-[500px] opacity-10 pointer-events-none transform rotate-180"
+                        style="background: repeating-radial-gradient(circle at 0 0, transparent 0, #000 2px, transparent 4px, transparent 40px);">
+                    </div>
+
+                    <!-- Floating Hearts -->
                     <div
-                        class="absolute top-10 left-10 text-miles opacity-20 text-9xl font-bangers transform -rotate-12">
+                        class="absolute top-20 right-20 text-miles text-9xl font-bangers rotate-12 opacity-80 animate-pulse">
                         ♥</div>
-                    <div
-                        class="absolute bottom-10 right-10 text-gwen opacity-20 text-9xl font-bangers transform rotate-12">
-                        ♥</div>
+                    <div class="absolute bottom-40 left-10 text-gwen text-9xl font-bangers -rotate-12 opacity-80 animate-pulse"
+                        style="animation-delay: 0.5s;">♥</div>
 
                     <!-- CONTENT WRAPPER -->
                     <div
-                        class="z-10 w-full h-full flex flex-col items-center pt-48 pb-32 px-12 relative bg-transparent justify-between">
+                        class="z-10 w-full h-full flex flex-col items-center pt-32 pb-20 px-8 relative justify-between">
 
-                        <!-- Header -->
-                        <div class="flex flex-col items-center w-full relative mb-8">
-                            <!-- Massive Logo Badge -->
+                        <!-- HEADER: COMIC LOGO -->
+                        <div class="flex flex-col items-center w-full relative mb-12">
                             <div
-                                class="bg-yellow border-[6px] border-black px-12 py-4 transform -rotate-2 shadow-[12px_12px_0_#ff3d5e] z-10 relative skew-x-[-10deg]">
+                                class="bg-yellow border-[8px] border-black px-16 py-6 transform -rotate-2 shadow-[16px_16px_0_#ff3d5e] z-10 relative">
                                 <h1
-                                    class="font-bangers text-[6rem] text-black leading-none drop-shadow-[4px_4px_0_rgba(0,0,0,0.2)]">
-                                    DROPOUT HACKS</h1>
+                                    class="font-bangers text-[7rem] text-black leading-none drop-shadow-[5px_5px_0_rgba(255,255,255,0.8)]">
+                                    FLAMES REPORT</h1>
                             </div>
-
-                            <!-- Subtitle Bar -->
                             <div
-                                class="bg-black border-4 border-white px-8 py-2 transform rotate-1 -mt-8 z-0 shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
-                                <span
-                                    class="font-mono text-xl tracking-[0.4em] text-pink-400 uppercase font-bold drop-shadow-[0_0_10px_rgba(244,114,182,0.8)]">OFFICIAL
-                                    FLAMES REPORT</span>
+                                class="bg-black text-white font-mono font-bold text-2xl tracking-[0.5em] px-8 py-2 transform rotate-1 -mt-6 z-20 border-4 border-white">
+                                MULTIVERSE COMPATIBILITY
                             </div>
-
-                            <!-- Decorative Cupid Arrow -->
-                            <div class="absolute top-1/2 left-0 w-full h-2 bg-white/20 -z-10 rotate-[-5deg]"></div>
                         </div>
 
-                        <!-- CENTER STAGE: NAMES -->
-                        <div class="w-full flex flex-col justify-center gap-12 relative flex-grow">
+                        <!-- MAIN CONTENT: NAMES & HEART -->
+                        <div class="w-full flex-grow flex flex-col justify-center items-center gap-10 relative">
 
-                            <!-- Name 1 -->
-                            <div class="relative group w-full pr-12">
-                                <div class="absolute -inset-4 bg-miles blur-[40px] opacity-30"></div>
+                            <!-- Name 1: MILES STYLE -->
+                            <div class="relative w-full max-w-[900px]">
+                                <!-- Card Background -->
+                                <div class="absolute inset-0 bg-black translate-x-4 translate-y-4"></div>
                                 <div
-                                    class="relative bg-[#0a0a0a] border-[4px] border-miles p-8 transform -rotate-1 shadow-[10px_10px_0_rgba(255,61,94,0.5)] min-h-[250px] flex flex-col justify-center">
-                                    <div class="flex justify-between items-center mb-4 border-b-2 border-miles/30 pb-2">
-                                        <span class="font-mono text-miles text-xl tracking-widest font-bold">♥
-                                            VARIANT_01</span>
-                                        <span class="text-3xl">🕸️</span>
+                                    class="relative bg-miles border-[6px] border-black p-8 transform -rotate-1 flex flex-col items-center justify-center min-h-[220px]">
+                                    <div
+                                        class="absolute -top-6 -left-6 bg-white border-4 border-black p-2 rounded-full z-20">
+                                        <span class="text-4xl">🕷️</span>
                                     </div>
+                                    <h2 class="font-mono text-black/60 font-bold text-xl tracking-widest mb-2">Subject
+                                        1610</h2>
                                     <div id="share-name1"
-                                        class="font-bangers text-[6rem] leading-[0.9] uppercase text-white drop-shadow-[4px_4px_0_#ff3d5e] break-words text-left pl-2">
+                                        class="font-bangers text-[6rem] leading-[0.9] text-white text-stroke-black drop-shadow-[4px_4px_0_#000] text-center break-words w-full">
                                         MILES
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- HEART VS -->
+                            <!-- VS HEART CONNECTOR -->
                             <div
-                                class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none drop-shadow-[0_0_40px_rgba(0,0,0,0.8)]">
+                                class="relative z-20 scale-150 transform rotate-6 drop-shadow-[0_10px_20px_rgba(0,0,0,0.3)] my-4">
                                 <div
-                                    class="font-bangers text-[10rem] text-white leading-none transform rotate-12 text-shadow-neon bg-[#050505] rounded-full px-6 border-4 border-white/10">
-                                    <span class="text-miles">X</span><span class="text-gwen">O</span>
+                                    class="bg-white p-6 rounded-full border-[6px] border-black flex items-center justify-center w-40 h-40">
+                                    <span class="font-marker text-[5rem] text-miles">♥</span>
+                                </div>
+                                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                    <span class="font-bangers text-[3rem] text-black -rotate-12 mt-2">VS</span>
                                 </div>
                             </div>
 
-                            <!-- Name 2 -->
-                            <div class="relative group self-end text-right w-full pl-12">
-                                <div class="absolute -inset-4 bg-gwen blur-[40px] opacity-30"></div>
+                            <!-- Name 2: GWEN STYLE -->
+                            <div class="relative w-full max-w-[900px]">
+                                <!-- Card Background -->
+                                <div class="absolute inset-0 bg-black translate-x-4 translate-y-4"></div>
                                 <div
-                                    class="relative bg-[#0a0a0a] border-[4px] border-gwen p-8 transform rotate-1 shadow-[10px_10px_0_rgba(0,210,255,0.5)] min-h-[250px] flex flex-col justify-center">
+                                    class="relative bg-gwen border-[6px] border-black p-8 transform rotate-1 flex flex-col items-center justify-center min-h-[220px]">
                                     <div
-                                        class="flex justify-between items-center mb-4 border-b-2 border-gwen/30 pb-2 flex-row-reverse">
-                                        <span class="font-mono text-gwen text-xl tracking-widest font-bold">VARIANT_02
-                                            ♥</span>
-                                        <span class="text-3xl">🕷️</span>
+                                        class="absolute -bottom-6 -right-6 bg-white border-4 border-black p-2 rounded-full z-20">
+                                        <span class="text-4xl">🕸️</span>
                                     </div>
+                                    <h2 class="font-mono text-black/60 font-bold text-xl tracking-widest mb-2">Subject
+                                        65</h2>
                                     <div id="share-name2"
-                                        class="font-bangers text-[6rem] leading-[0.9] uppercase text-white drop-shadow-[4px_4px_0_#00d2ff] break-words text-right pr-2">
+                                        class="font-bangers text-[6rem] leading-[0.9] text-white text-stroke-black drop-shadow-[4px_4px_0_#000] text-center break-words w-full">
                                         GWEN
                                     </div>
                                 </div>
                             </div>
+
                         </div>
 
-                        <!-- RESULT SECTION -->
-                        <div class="relative w-full px-4 mb-4">
+                        <!-- RESULT FOOTER -->
+                        <div class="w-full mt-12 relative flex flex-col items-center">
+
                             <!-- Result Box -->
                             <div
-                                class="relative bg-white/5 backdrop-blur-2xl p-10 border-[4px] border-pink-400 transform w-full text-center rounded-[2.5rem] shadow-[0_0_50px_rgba(255,61,94,0.15)] flex flex-col items-center justify-center min-h-[350px]">
-
-                                <!-- Love Pct -->
-                                <div class="flex items-center justify-center gap-4 mb-6 mt-2">
-                                    <span class="text-pink-400 text-3xl animate-pulse">♥</span>
-                                    <span id="share-love-pct"
-                                        class="font-mono text-[4rem] text-white font-bold tracking-tighter drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]">99%</span>
-                                    <span class="text-pink-400 text-3xl animate-pulse">♥</span>
-                                </div>
-
+                                class="bg-white border-[6px] border-black p-10 w-full max-w-[800px] relative shadow-[20px_20px_0_rgba(0,0,0,0.1)] transform rotate-[-1deg]">
+                                <!-- Tape -->
                                 <div
-                                    class="w-2/3 bg-gradient-to-r from-transparent via-pink-500/50 to-transparent h-[2px] mb-8">
+                                    class="absolute -top-6 left-1/2 transform -translate-x-1/2 w-32 h-10 bg-yellow/80 rotate-2 border-2 border-transparent opacity-80">
                                 </div>
 
-                                <!-- Result Word -->
-                                <div class="relative py-4">
+                                <div class="flex flex-col items-center">
+                                    <div class="flex items-center gap-4 mb-4">
+                                        <span class="text-5xl">💘</span>
+                                        <span id="share-love-pct"
+                                            class="font-bangers text-[6rem] text-black leading-none dropshadow-md">99%</span>
+                                        <span class="text-5xl">💘</span>
+                                    </div>
+
+                                    <div class="w-full h-1 bg-black/10 mb-6"></div>
+
                                     <div id="share-result-word"
-                                        class="font-permanent-marker text-[7.5rem] leading-[0.8] text-white uppercase drop-shadow-[0_5px_0_#000] rotate-[-2deg] z-10 relative"
-                                        style="-webkit-text-stroke: 3px #ff3d5e; text-shadow: 6px 6px 0px #000;">
+                                        class="font-marker text-[7rem] leading-none text-miles transform -rotate-2 drop-shadow-[5px_5px_0_#000] uppercase text-stroke-white text-shadow-comic">
                                         LOVERS
                                     </div>
-                                    <!-- Glow behind text -->
-                                    <div class="absolute inset-0 bg-pink-500/20 blur-[50px] z-0"></div>
-                                </div>
-
-                                <div
-                                    class="absolute -top-6 right-8 bg-white text-black font-bangers text-3xl px-6 py-2 transform rotate-3 border-4 border-black shadow-[6px_6px_0_#ff3d5e]">
-                                    CUPID APPROVED 💘
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- FOOTER -->
-                        <div class="flex justify-center items-center pt-6 border-t border-white/10 w-full mb-8">
-                            <div class="text-center">
-                                <div
-                                    class="font-mono text-xs text-pink-300 tracking-[0.3em] mb-2 opacity-80 decoration-pink-300 underline underline-offset-4">
-                                    GENERATED IN THE MULTIVERSE</div>
-                                <div class="font-bangers text-4xl text-white tracking-wider drop-shadow-lg">
-                                    dropouthacks.tech</div>
+                            <!-- URL Footer -->
+                            <div
+                                class="mt-16 bg-black text-white px-8 py-3 rounded-full font-mono text-xl tracking-widest border-4 border-yellow transform rotate-1">
+                                DROPOUTHACKS.TECH
                             </div>
                         </div>
 
