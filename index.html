@@ -224,64 +224,78 @@
         }
 
         /* ===== CHARACTER ANIMATIONS ===== */
-        .char-img {
+        .char-container {
             position: absolute;
-            width: 140px;
-            /* Slightly larger */
-            top: -160px;
-            /* Hidden far above */
-            z-index: 30;
-            /* Bring IN FRONT of input container now so they overlap slightly if needed, or keeping behind depends on desired look. Let's try OVERLAP for "hanging" effect */
-            transition: all 0.5s cubic-bezier(1.000, 0.005, 0.235, 1.210);
-            /* Bouncy drop */
+            width: 120px;
+            top: -400px;
+            z-index: 20;
+            transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             opacity: 0;
             pointer-events: none;
+            transform-origin: top center;
         }
 
-        /* Hanging Animation Logic */
-        .group:focus-within .char-img {
+        /* Web Line
+        .char-container::before {
+            content: "";
+            position: absolute;
+            top: -1000px;
+            left: 50%;
+            width: 2px;
+            height: 1000px;
+            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.5));
+            transform: translateX(-50%);
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+        } */
+
+        .group:focus-within .char-container {
             opacity: 1;
-            top: -100px;
-            /* Drop down to hang position */
         }
 
-        /* Spider-Man (Left) - Upside Down Hang */
+        /* Miles Logic */
+        .char-left-wrap {
+            left: -70px;
+        }
+
+        .group:focus-within .char-left-wrap {
+            top: -80px;
+            /* Hanging lower as per image */
+            animation: swingLeft 4s infinite ease-in-out;
+        }
+
+        /* Gwen Logic */
+        .char-right-wrap {
+            right: -80px;
+        }
+
+        .group:focus-within .char-right-wrap {
+            top: -80px;
+            animation: swingRight 4s infinite ease-in-out;
+        }
+
+        .char-img {
+            width: 100%;
+            height: auto;
+            transform: rotate(180deg);
+        }
+
         .char-left {
-            left: -60px;
-            transform: rotate(-15deg);
+            transform: rotate(0deg) !important;
         }
 
-        .group:focus-within .char-left {
-            top: -10px;
-            /* Hangs right off the input top edge */
-            transform: rotate(175deg);
-            /* Slight swing */
-            animation: swingLeft 3s infinite ease-in-out;
-        }
-
-        /* Gwen (Right) - Upside Down Hang */
         .char-right {
-            right: -60px;
-            transform: rotate(15deg);
-        }
-
-        .group:focus-within .char-right {
-            top: -10px;
-            /* Hangs right off the input top edge */
-            transform: rotate(185deg) scaleX(-1);
-            /* Slight swing */
-            animation: swingRight 3s infinite ease-in-out;
+            transform: rotate(0deg) !important;
         }
 
         @keyframes swingLeft {
 
             0%,
             100% {
-                transform: rotate(175deg);
+                transform: rotate(-3deg);
             }
 
             50% {
-                transform: rotate(185deg);
+                transform: rotate(3deg);
             }
         }
 
@@ -289,13 +303,16 @@
 
             0%,
             100% {
-                transform: rotate(185deg) scaleX(-1);
+                transform: rotate(3deg);
             }
 
             50% {
-                transform: rotate(175deg) scaleX(-1);
+                transform: rotate(-3deg);
             }
         }
+
+        /* Character animations handled by .char-container above */
+
 
 
         /* ===== ACTION BUTTON ===== */
@@ -693,8 +710,10 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-end">
                     <!-- Name 1 - Spider-Man Animation (Hanging) -->
                     <div class="relative group">
-                        <!-- Character Image: Hidden by default, hangs down on focus -->
-                        <img src="assets/spiderman.png" alt="Spider-Man" class="char-img char-left">
+                        <!-- Character Image Container -->
+                        <div class="char-container char-left-wrap">
+                            <img src="assets/spiderman.png" alt="Spider-Man" class="char-img char-left">
+                        </div>
 
                         <label
                             class="block font-bangers text-xl mb-1 ml-1 text-miles drop-shadow-[1.5px_1.5px_0_#0f0f0f]"
@@ -707,8 +726,10 @@
 
                     <!-- Name 2 - Gwen Stacy Animation (Hanging) -->
                     <div class="relative group">
-                        <!-- Character Image: Hidden by default, hangs down on focus -->
-                        <img src="assets/gwen.png" alt="Gwen Stacy" class="char-img char-right">
+                        <!-- Character Image Container -->
+                        <div class="char-container char-right-wrap">
+                            <img src="assets/gwen.png" alt="Gwen Stacy" class="char-img char-right">
+                        </div>
 
                         <label
                             class="block font-bangers text-xl mb-1 ml-1 text-gwen drop-shadow-[1.5px_1.5px_0_#0f0f0f]"
