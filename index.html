@@ -111,8 +111,7 @@
             position: relative;
             box-shadow: 12px 12px 0 #0f0f0f;
             transition: transform 0.2s ease;
-            /* FIXED: removed overflow: hidden so tape can pop out */
-            /* overflow: visible usually default, explicitly setting it here */
+            /* removed overflow: hidden so tape can pop out */
             overflow: visible;
         }
 
@@ -143,7 +142,8 @@
         /* ===== TAPE STRIPS ===== */
         .tape {
             position: absolute;
-            width: 140px;
+            width: 160px;
+            /* Slightly wider for longer text */
             height: 40px;
             background: #ffe600;
             border: 3px solid #0f0f0f;
@@ -153,7 +153,8 @@
             top: -22px;
             /* Lift it up over border */
             left: 50%;
-            margin-left: -70px;
+            margin-left: -80px;
+            /* Adjusted centering */
             box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
             display: flex;
             align-items: center;
@@ -161,11 +162,12 @@
         }
 
         .tape::after {
-            content: 'CLASSIFIED';
+            content: 'CANON EVENT?';
+            /* Updated text */
             font-family: 'Bangers', cursive;
             font-size: 1.2rem;
             color: #0f0f0f;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
         }
 
         /* ===== INPUT FIELDS (Rough Sketch Style) ===== */
