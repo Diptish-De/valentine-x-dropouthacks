@@ -1170,6 +1170,33 @@
             'S': { word: 'SIBLINGS', desc: 'Different universes, same family energy. Spider-siblings for life! 🧬', class: 'stamp-siblings' }
         };
 
+        // --- GOOGLE SHEETS LOGGING ---
+        // Instructions: 
+        // 1. Go to your Sheet (1O-4rDyt-3CyUM4gJreKsLgNNRvAIbLTQFcCunQr3whU)
+        // 2. Extensions > Apps Script
+        // 3. Paste the following and Deploy as Web App (Anyone):
+        /*
+          function doPost(e) {
+            var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+            var data = JSON.parse(e.postData.contents);
+            sheet.appendRow([new Date(), data.name1, data.name2]);
+            return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
+          }
+        */
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwTjQGBHowoI6QDtftQhRZU6I_F7wBNP5dX1zHUTO6s6X3YGRX_7YkG-XaxcCYl6vf4/exec';
+
+        async function logToGoogleSheet(name1, name2) {
+            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbwTjQGBHowoI6QDtftQhRZU6I_F7wBNP5dX1zHUTO6s6X3YGRX_7YkG-XaxcCYl6vf4/exec') return;
+            try {
+                fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: JSON.stringify({ name1, name2 })
+                });
+            } catch (e) { console.error('Logging failed', e); }
+        }
+
+
         // Original Chars
         const FLAMES_CHARS = ['F', 'L', 'A', 'M', 'E', 'S'];
 
@@ -1188,6 +1215,9 @@
             // Switch views
             document.getElementById('input-section').classList.add('hidden');
             document.getElementById('calc-section').classList.remove('hidden');
+
+            // Log to Google Sheet
+            logToGoogleSheet(n1Input, n2Input);
 
             // Setup letters (Keep only alphabets)
             const n1CleanChars = n1Input.replace(/[^a-zA-Z]/g, '').toLowerCase().split('');
