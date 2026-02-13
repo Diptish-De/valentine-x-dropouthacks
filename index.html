@@ -81,6 +81,35 @@
             position: relative;
         }
 
+        /* Continuous Vertical Webs */
+        body::before,
+        body::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2.5px;
+            background: #ffffff;
+            opacity: 0.15;
+            /* Subtle background threads */
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Desktop Positioning */
+        @media (min-width: 768px) {
+            body::before {
+                left: calc(50% - 138px);
+            }
+
+            /* Aligns with HE */
+            body::after {
+                left: calc(50% + 118px);
+            }
+
+            /* Aligns with SHE */
+        }
+
         /* ===== BACKGROUND DECORATIONS ===== */
         .bg-shape {
             position: fixed;
@@ -243,24 +272,21 @@
         .char-container::before {
             content: "";
             position: absolute;
-            top: -2000px;
-            width: 1.5px;
-            height: 2020px;
-            /* Slight overlap with char */
-            background: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-            z-index: -1;
-        }
-
-        .char-left-wrap::before {
-            left: 48%;
-            /* Miles alignment */
+            top: -5000px;
+            /* Stretch all the way to top of multiverse */
+            left: 50%;
+            width: 2.5px;
+            height: 5050px;
+            background: #ffffff;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 0.4);
             transform: translateX(-50%);
+            z-index: -1;
+            opacity: 1;
         }
 
+        .char-left-wrap::before,
         .char-right-wrap::before {
-            left: 52%;
-            /* Gwen alignment */
+            left: 50%;
             transform: translateX(-50%);
         }
 
@@ -890,7 +916,7 @@
     <div class="sticker hidden lg:block right-10 bottom-40 -rotate-12 text-6xl opacity-20 font-bangers">ZAP!</div>
 
     <!-- MAIN CONTAINER: Reduced max-width (max-w-3xl) -->
-    <div class="w-full max-w-3xl relative z-10 transition-all duration-300">
+    <div class="w-full max-w-3xl relative z-10">
 
         <!-- HEADER -->
         <div class="text-center mb-8 relative">
