@@ -664,7 +664,6 @@
             }
         }
 
-
         .text-stroke-black {
             -webkit-text-stroke: 3px #000;
         }
@@ -679,6 +678,104 @@
 
         .text-shadow-neon {
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 61, 94, 0.5);
+        }
+
+        /* ===== MODAL OVERLAY ===== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.98);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 40px 20px;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .preview-frame {
+            width: 100%;
+            height: 70vh;
+            /* Scaled to viewport height */
+            max-height: 800px;
+            aspect-ratio: 9/16;
+            background: #050505;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 100px rgba(0, 0, 0, 1), 0 0 30px rgba(255, 61, 94, 0.2);
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 24px;
+            flex-shrink: 0;
+            border-radius: 12px;
+        }
+
+        .preview-container {
+            width: 1080px;
+            height: 1920px;
+            transform-origin: top left;
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        /* Technical Toggle */
+        .tech-toggle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 99px;
+            margin-bottom: 24px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tech-toggle:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #ff3d5e;
+        }
+
+        .tech-toggle.active {
+            border-color: #ff3d5e;
+            box-shadow: 0 0 15px rgba(255, 61, 94, 0.3);
+        }
+
+        .tech-toggle .switch {
+            width: 40px;
+            height: 20px;
+            background: #333;
+            border-radius: 99px;
+            position: relative;
+            transition: background 0.3s ease;
+        }
+
+        .tech-toggle.active .switch {
+            background: #ff3d5e;
+        }
+
+        .tech-toggle .knob {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            transition: left 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .tech-toggle.active .knob {
+            left: 22px;
+        }
         }
     </style>
 </head>
@@ -832,9 +929,9 @@
 
                     <!-- Share Button -->
                     <div id="share-container" class="mb-4 hidden">
-                        <button onclick="shareResult()"
+                        <button onclick="openSharePreview()"
                             class="btn-comic bg-yellow text-black border-black transform -rotate-1 hover:rotate-0 flex items-center gap-2 mx-auto">
-                            <span>SHARE YOUR DESTINY 📸</span>
+                            <span>GENERATE SHARE CARD 📸</span>
                         </button>
                     </div>
 
@@ -842,6 +939,39 @@
                         class="hidden font-bangers text-lg text-gray-400 hover:text-miles transition-colors border-b-2 border-transparent hover:border-miles transform hover:-rotate-2">
                         Try Another Timeline ↺
                     </button>
+                </div>
+
+                <!-- SHARE PREVIEW MODAL -->
+                <div id="preview-modal" class="modal-overlay">
+                    <div class="text-center mb-6">
+                        <h2 class="font-bangers text-4xl text-white mb-2 tracking-wide">REPORT PREVIEW</h2>
+                        <div class="flex justify-center flex-col items-center gap-4">
+                            <div id="privacy-toggle" class="tech-toggle" onclick="togglePartnerPrivacy()">
+                                <div class="switch">
+                                    <div class="knob"></div>
+                                </div>
+                                <span class="font-mono text-xs text-white uppercase tracking-widest font-bold">HIDE
+                                    PARTNER NAME</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="preview-frame">
+                        <div id="preview-content-wrapper" class="preview-container">
+                            <!-- Share card cloned here -->
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex gap-4 w-full max-w-sm">
+                        <button onclick="shareResult()"
+                            class="btn-comic flex-1 text-base py-3 bg-miles shadow-[4px_4px_0_#0f0f0f]">
+                            DOWNLOAD JPG
+                        </button>
+                        <button onclick="closeSharePreview()"
+                            class="btn-comic flex-1 text-base py-3 bg-white text-black border-black shadow-[4px_4px_0_#0f0f0f]">
+                            CANCEL
+                        </button>
+                    </div>
                 </div>
 
                 <!-- HIDDEN SHARE CARD (For HTML2Canvas) -->
@@ -878,37 +1008,42 @@
                     <div
                         class="z-10 w-full h-full flex flex-col items-center pt-32 pb-20 px-8 relative justify-between">
 
-                        <!-- HEADER: COMIC LOGO -->
-                        <div class="flex flex-col items-center w-full relative mb-12">
+                        <!-- Header -->
+                        <div class="flex flex-col items-center w-full relative mb-16">
+                            <!-- Massive Logo Badge -->
                             <div
-                                class="bg-yellow border-[8px] border-black px-16 py-6 transform -rotate-2 shadow-[16px_16px_0_#ff3d5e] z-10 relative">
-                                <h1
-                                    class="font-bangers text-[7rem] text-black leading-none drop-shadow-[5px_5px_0_rgba(255,255,255,0.8)]">
-                                    FLAMES REPORT</h1>
+                                class="bg-yellow border-[8px] border-black px-16 py-6 transform -rotate-1 shadow-[15px_15px_0_#ff3d5e] z-10 relative">
+                                <h1 class="font-bangers text-[6rem] text-black leading-none tracking-tight">
+                                    DROPOUT HACKS</h1>
                             </div>
                             <div
-                                class="bg-black text-white font-mono font-bold text-2xl tracking-[0.5em] px-8 py-2 transform rotate-1 -mt-6 z-20 border-4 border-white">
-                                MULTIVERSE COMPATIBILITY
+                                class="bg-black border-4 border-white px-12 py-3 transform rotate-1 -mt-4 z-20 shadow-[0_15px_30px_rgba(0,0,0,0.6)]">
+                                <span
+                                    class="font-mono text-2xl tracking-[0.5em] text-pink-400 uppercase font-bold drop-shadow-[0_0_15px_rgba(244,114,182,0.9)]">OFFICIAL
+                                    FLAMES REPORT</span>
+                            </div>
+
+                            <!-- Decorative Line -->
+                            <div class="absolute top-[60%] left-[-10%] w-[120%] h-1 bg-white/10 -z-10 rotate-[2deg]">
                             </div>
                         </div>
 
                         <!-- MAIN CONTENT: NAMES & HEART -->
                         <div class="w-full flex-grow flex flex-col justify-center items-center gap-10 relative">
 
-                            <!-- Name 1: MILES STYLE -->
-                            <div class="relative w-full max-w-[900px]">
-                                <!-- Card Background -->
-                                <div class="absolute inset-0 bg-black translate-x-4 translate-y-4"></div>
+                            <!-- Name 1 -->
+                            <div class="relative group w-full pr-20">
+                                <div class="absolute -inset-4 bg-miles blur-[50px] opacity-15"></div>
                                 <div
-                                    class="relative bg-miles border-[6px] border-black p-8 transform -rotate-1 flex flex-col items-center justify-center min-h-[220px]">
-                                    <div
-                                        class="absolute -top-6 -left-6 bg-white border-4 border-black p-2 rounded-full z-20">
-                                        <span class="text-4xl">🕷️</span>
+                                    class="relative bg-[#080808] border-[5px] border-miles p-12 transform -rotate-1 shadow-[20px_20px_0_rgba(255,61,94,0.3)] min-h-[280px] flex flex-col justify-center rounded-2xl">
+                                    <div class="flex justify-between items-center mb-8 border-b-2 border-miles/20 pb-4">
+                                        <span
+                                            class="font-mono text-miles text-2xl tracking-[0.2em] font-black underline decoration-miles/50 underline-offset-8">SUBJECT
+                                            1610</span>
+                                        <span class="text-5xl text-miles opacity-50">🕸️</span>
                                     </div>
-                                    <h2 class="font-mono text-black/60 font-bold text-xl tracking-widest mb-2">Subject
-                                        1610</h2>
                                     <div id="share-name1"
-                                        class="font-bangers text-[6rem] leading-[0.9] text-white text-stroke-black drop-shadow-[4px_4px_0_#000] text-center break-words w-full">
+                                        class="font-bangers text-[6rem] leading-none uppercase text-white drop-shadow-[8px_8px_0_#ff3d5e] break-words text-left">
                                         MILES
                                     </div>
                                 </div>
@@ -922,77 +1057,103 @@
                                     <span class="font-marker text-[5rem] text-miles">♥</span>
                                 </div>
                                 <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                    <span class="font-bangers text-[3rem] text-black -rotate-12 mt-2">VS</span>
+                                    <span class="font-marker font-bold text-[3rem] text-black -rotate-12 mt-2">VS</span>
                                 </div>
                             </div>
 
-                            <!-- Name 2: GWEN STYLE -->
-                            <div class="relative w-full max-w-[900px]">
-                                <!-- Card Background -->
-                                <div class="absolute inset-0 bg-black translate-x-4 translate-y-4"></div>
+                            <!-- Name 2 -->
+                            <div class="relative group self-end text-right w-full pl-20">
+                                <div class="absolute -inset-4 bg-gwen blur-[50px] opacity-15"></div>
                                 <div
-                                    class="relative bg-gwen border-[6px] border-black p-8 transform rotate-1 flex flex-col items-center justify-center min-h-[220px]">
+                                    class="relative bg-[#080808] border-[5px] border-gwen p-12 transform rotate-1 shadow-[20px_20px_0_rgba(0,210,255,0.3)] min-h-[280px] flex flex-col justify-center rounded-2xl">
                                     <div
-                                        class="absolute -bottom-6 -right-6 bg-white border-4 border-black p-2 rounded-full z-20">
-                                        <span class="text-4xl">🕸️</span>
+                                        class="flex justify-between items-center mb-8 border-b-2 border-gwen/20 pb-4 flex-row-reverse">
+                                        <span
+                                            class="font-mono text-gwen text-2xl tracking-[0.2em] font-black underline decoration-gwen/50 underline-offset-8">SUBJECT
+                                            65</span>
+                                        <span class="text-5xl text-gwen opacity-50">🕷️</span>
                                     </div>
-                                    <h2 class="font-mono text-black/60 font-bold text-xl tracking-widest mb-2">Subject
-                                        65</h2>
-                                    <div id="share-name2"
-                                        class="font-bangers text-[6rem] leading-[0.9] text-white text-stroke-black drop-shadow-[4px_4px_0_#000] text-center break-words w-full">
-                                        GWEN
+                                    <div class="relative">
+                                        <div id="share-name2"
+                                            class="font-bangers text-[6rem] leading-none uppercase text-white drop-shadow-[8px_8px_0_#00d2ff] break-words text-right transition-all">
+                                            GWEN
+                                        </div>
+                                        <div id="share-name2-overlay"
+                                            class="absolute inset-0 flex items-center justify-end font-bangers text-[4rem] leading-none text-miles opacity-0 pointer-events-none drop-shadow-[4px_4px_0_#000] text-right">
+                                            Nahi bolna mujhe
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                         </div>
 
-                        <!-- RESULT FOOTER -->
-                        <div class="w-full mt-12 relative flex flex-col items-center">
-
+                        <!-- RESULT SECTION -->
+                        <div class="relative w-full px-6 mb-8 group">
                             <!-- Result Box -->
                             <div
-                                class="bg-white border-[6px] border-black p-10 w-full max-w-[800px] relative shadow-[20px_20px_0_rgba(0,0,0,0.1)] transform rotate-[-1deg]">
-                                <!-- Tape -->
+                                class="relative bg-[#0a0a0a] backdrop-blur-3xl p-12 border-[6px] border-white/10 transform w-full text-center rounded-[3rem] shadow-[0_0_80px_rgba(255,61,94,0.2)] flex flex-col items-center justify-center min-h-[380px]">
+
                                 <div
-                                    class="absolute -top-6 left-1/2 transform -translate-x-1/2 w-32 h-10 bg-yellow/80 rotate-2 border-2 border-transparent opacity-80">
+                                    class="absolute inset-0 border-[2px] border-pink-500/30 rounded-[3rem] m-2 animate-pulse">
                                 </div>
 
-                                <div class="flex flex-col items-center">
-                                    <div class="flex items-center gap-4 mb-4">
-                                        <span class="text-5xl">💘</span>
-                                        <span id="share-love-pct"
-                                            class="font-bangers text-[6rem] text-black leading-none dropshadow-md">99%</span>
-                                        <span class="text-5xl">💘</span>
-                                    </div>
+                                <!-- Love Pct -->
+                                <div class="flex items-center justify-center gap-6 mb-8 mt-2">
+                                    <span class="text-miles text-4xl">♥</span>
+                                    <span id="share-love-pct"
+                                        class="font-mono text-[5rem] text-white font-black tracking-tighter drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">99%</span>
+                                    <span class="text-gwen text-4xl">♥</span>
+                                </div>
 
-                                    <div class="w-full h-1 bg-black/10 mb-6"></div>
+                                <div
+                                    class="font-mono text-xl text-white/40 tracking-[0.4em] uppercase mb-4 font-bold italic">
+                                    Compatibility Metric</div>
 
+                                <!-- Result Word -->
+                                <div class="relative py-6 w-full flex justify-center">
                                     <div id="share-result-word"
-                                        class="font-marker text-[7rem] leading-none text-miles transform -rotate-2 drop-shadow-[5px_5px_0_#000] uppercase text-stroke-white text-shadow-comic">
-                                        LOVERS
+                                        class="font-permanent-marker text-[7rem] leading-none text-white uppercase drop-shadow-[0_10px_0_#000] rotate-[-2deg] z-10 relative px-6 text-center"
+                                        style="-webkit-text-stroke: 4px #ff3d5e; text-shadow: 10px 10px 0px #000;">
+                                        SOULMATES
+                                    </div>
+                                    <!-- Glow behind text -->
+                                    <div
+                                        class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-32 bg-miles/20 blur-[60px] -z-10">
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- URL Footer -->
                             <div
-                                class="mt-16 bg-black text-white px-8 py-3 rounded-full font-mono text-xl tracking-widest border-4 border-yellow transform rotate-1">
-                                DROPOUTHACKS.TECH
+                                class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-white text-black font-bangers text-[3.5rem] px-10 py-4 transform rotate-2 border-4 border-black shadow-[10px_10px_0_#ff3d5e] z-30">
+                                CUPID APPROVED 💘
                             </div>
                         </div>
-
                     </div>
-                </div>
 
+                    <!-- FOOTER -->
+                    <div class="flex justify-center items-center pt-6 border-t border-white/10 w-full mb-8">
+                        <div class="text-center">
+                            <div
+                                class="font-mono text-xs text-pink-300 tracking-[0.3em] mb-2 opacity-80 decoration-pink-300 underline underline-offset-4">
+                                GENERATED IN THE MULTIVERSE</div>
+                            <div class="font-bangers text-4xl text-white tracking-wider drop-shadow-lg">
+                                dropouthacks.tech</div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
         </div>
+
+    </div>
     </div>
 
     <!-- FOOTER -->
     <div class="text-center font-mono text-xs opacity-60">
-        <p>BUILT FOR THE MULTIVERSE BY <span class="font-bold">DROPOUT HACKS</span></p>
+        <p>BUILT FOR THE MULTIVERSE BY <span class="font-bold">DROPOUT
+                HACKS</span></p>
     </div>
 
     </div>
@@ -1116,56 +1277,77 @@
         function playSound(type) {
             if (audioCtx.state === 'suspended') audioCtx.resume();
 
-            const osc = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-
-            osc.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-
             const now = audioCtx.currentTime;
 
             if (type === 'tick') {
+                // Subtle high-tech pop
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(400, now);
-                osc.frequency.exponentialRampToValueAtTime(600, now + 0.1);
-                gainNode.gain.setValueAtTime(0.3, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.frequency.setValueAtTime(600, now);
+                osc.frequency.exponentialRampToValueAtTime(300, now + 0.05);
+                gain.gain.setValueAtTime(0.03, now); // Much lower volume
+                gain.gain.linearRampToValueAtTime(0, now + 0.05);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
                 osc.start(now);
-                osc.stop(now + 0.1);
+                osc.stop(now + 0.05);
             }
             else if (type === 'eliminate') {
-                osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(200, now);
-                osc.frequency.exponentialRampToValueAtTime(50, now + 0.3);
-                gainNode.gain.setValueAtTime(0.3, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                // Soft digital low-thud
+                const osc = audioCtx.createOscillator();
+                const filter = audioCtx.createBiquadFilter();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                filter.type = 'lowpass';
+                filter.frequency.value = 400;
+                osc.frequency.setValueAtTime(120, now);
+                osc.frequency.linearRampToValueAtTime(40, now + 0.3);
+                gain.gain.setValueAtTime(0.08, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
                 osc.start(now);
                 osc.stop(now + 0.3);
             }
             else if (type === 'win') {
-                // Arpeggio
-                const notes = [440, 554, 659, 880];
-                notes.forEach((freq, i) => {
-                    const o = audioCtx.createOscillator();
-                    const g = audioCtx.createGain();
-                    o.type = 'triangle';
-                    o.connect(g);
-                    g.connect(audioCtx.destination);
-                    o.frequency.value = freq;
-                    g.gain.setValueAtTime(0.2, now + i * 0.1);
-                    g.gain.exponentialRampToValueAtTime(0.01, now + 0.1 + i * 0.1 + 0.5);
-                    o.start(now + i * 0.1);
-                    o.stop(now + i * 0.1 + 0.6);
+                // Gentle ethereal chime
+                const chords = [523.25, 659.25, 783.99, 1046.50];
+                chords.forEach((freq, i) => {
+                    const osc = audioCtx.createOscillator();
+                    const filter = audioCtx.createBiquadFilter();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    filter.type = 'lowpass';
+                    filter.frequency.value = 1000;
+                    osc.frequency.setValueAtTime(freq, now + i * 0.1);
+                    gain.gain.setValueAtTime(0.05, now + i * 0.1);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.8);
+                    osc.connect(filter);
+                    filter.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now + i * 0.1);
+                    osc.stop(now + i * 0.1 + 0.9);
                 });
             }
             else if (type === 'strike') {
-                osc.type = 'square';
+                // Very soft web "hiss"
+                const osc = audioCtx.createOscillator();
+                const filter = audioCtx.createBiquadFilter();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                filter.type = 'lowpass';
+                filter.frequency.value = 1500;
                 osc.frequency.setValueAtTime(800, now);
-                osc.frequency.exponentialRampToValueAtTime(100, now + 0.1);
-                gainNode.gain.setValueAtTime(0.2, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.frequency.exponentialRampToValueAtTime(200, now + 0.15);
+                gain.gain.setValueAtTime(0.05, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+                osc.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
                 osc.start(now);
-                osc.stop(now + 0.1);
+                osc.stop(now + 0.15);
             }
         }
 
@@ -1403,12 +1585,56 @@
         }
 
         /* =========================================
-           SHARE FUNCTIONALITY
+           SHARE PREVIEW & PRIVACY
            ========================================= */
-        /* =========================================
-           SHARE FUNCTIONALITY
-           ========================================= */
-        function shareResult() {
+        let partnerPrivacyActive = false;
+
+        function togglePartnerPrivacy() {
+            partnerPrivacyActive = !partnerPrivacyActive;
+            const toggle = document.getElementById('privacy-toggle');
+            if (partnerPrivacyActive) {
+                toggle.classList.add('active');
+            } else {
+                toggle.classList.remove('active');
+            }
+            updateShareCard();
+        }
+
+        function openSharePreview() {
+            updateShareCard();
+            const modal = document.getElementById('preview-modal');
+            modal.classList.add('active');
+
+            // Find frame and calculate scale
+            const frame = modal.querySelector('.preview-frame');
+            const wrapper = document.getElementById('preview-content-wrapper');
+            const scale = frame.offsetHeight / 1920;
+            wrapper.style.transform = `scale(${scale})`;
+
+            // Adjust frame width to match scaled content
+            frame.style.width = (1080 * scale) + 'px';
+
+            wrapper.innerHTML = '';
+            const clone = document.getElementById('share-card').cloneNode(true);
+            clone.classList.remove('fixed', 'top-0', 'left-[-9999px]', 'z-[-10]', 'pointer-events-none');
+            clone.style.position = 'relative';
+            clone.style.left = '0';
+            wrapper.appendChild(clone);
+        }
+
+        // Recalculate if window resizes while modal open
+        window.addEventListener('resize', () => {
+            const modal = document.getElementById('preview-modal');
+            if (modal.classList.contains('active')) {
+                openSharePreview();
+            }
+        });
+
+        function closeSharePreview() {
+            document.getElementById('preview-modal').classList.remove('active');
+        }
+
+        function updateShareCard() {
             const n1 = document.getElementById('name1').value.trim() || 'MILES';
             const n2 = document.getElementById('name2').value.trim() || 'GWEN';
             const lovePct = document.querySelector('#result-desc span') ? document.querySelector('#result-desc span').innerText : '99%';
@@ -1419,24 +1645,43 @@
 
             // Populate hidden card
             document.getElementById('share-name1').innerText = n1.toUpperCase();
-            document.getElementById('share-name2').innerText = n2.toUpperCase();
+
+            const name2El = document.getElementById('share-name2');
+            const overlayEl = document.getElementById('share-name2-overlay');
+
+            name2El.innerText = n2.toUpperCase();
+
+            if (partnerPrivacyActive) {
+                name2El.style.filter = 'blur(15px)';
+                name2El.style.opacity = '0.4';
+                overlayEl.style.opacity = '1';
+            } else {
+                name2El.style.filter = 'none';
+                name2El.style.opacity = '1';
+                overlayEl.style.opacity = '0';
+            }
+
             document.getElementById('share-love-pct').innerText = lovePct;
             document.getElementById('share-result-word').innerText = resultWord;
+        }
 
-            // Generate Image
+        function shareResult() {
+            const n1 = document.getElementById('name1').value.trim() || 'MILES';
+            const n2 = document.getElementById('name2').value.trim() || 'GWEN';
+
             const shareCard = document.getElementById('share-card');
 
             html2canvas(shareCard, {
                 scale: 1, // Full resolution 1080x1920
-                backgroundColor: '#f4f1ea',
+                backgroundColor: '#050505',
                 logging: false,
                 useCORS: true
             }).then(canvas => {
-                // Force Download as JPG
                 const link = document.createElement('a');
-                link.download = `flames-${n1}-${n2}.jpg`;
-                link.href = canvas.toDataURL('image/jpeg', 0.9); // 90% quality JPG
+                link.download = `flames-${n1}-${partnerPrivacyActive ? 'redacted' : n2}.jpg`;
+                link.href = canvas.toDataURL('image/jpeg', 0.9);
                 link.click();
+                closeSharePreview();
             });
         }
 
