@@ -1173,13 +1173,13 @@
           function doPost(e) {
             var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
             var data = JSON.parse(e.postData.contents);
-            sheet.appendRow([new Date(), data.name1, data.name2]);
+            sheet.appendRow([new Date(), data.name1, data.name2, data.result]);
             return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
           }
         */
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwTjQGBHowoI6QDtftQhRZU6I_F7wBNP5dX1zHUTO6s6X3YGRX_7YkG-XaxcCYl6vf4/exec';
 
-        async function logToGoogleSheet(name1, name2) {
+        async function logToGoogleSheet(name1, name2, result) {
             if (!GOOGLE_SCRIPT_URL) return;
             try {
                 // Use standard form-like submission or properly formatted fetch for Google Apps Script
@@ -1190,9 +1190,9 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ name1, name2 })
+                    body: JSON.stringify({ name1, name2, result })
                 });
-                console.log('Logging attempted for:', name1, name2);
+                console.log('Logging attempted for:', name1, name2, result);
             } catch (e) {
                 console.error('Logging request failed:', e);
             }
@@ -1218,8 +1218,7 @@
             document.getElementById('input-section').classList.add('hidden');
             document.getElementById('calc-section').classList.remove('hidden');
 
-            // Log to Google Sheet
-            logToGoogleSheet(n1Input, n2Input);
+
 
             // Setup letters (Keep only alphabets)
             const n1CleanChars = n1Input.replace(/[^a-zA-Z]/g, '').toLowerCase().split('');
@@ -1515,6 +1514,9 @@
             document.getElementById('result-desc-container').classList.remove('opacity-0');
             document.getElementById('reset-btn').classList.remove('hidden');
             document.getElementById('share-container').classList.remove('hidden');
+
+            // Log to Google Sheet with result
+            logToGoogleSheet(n1, n2, data.word);
 
             // Celebration
             playSound('win');
