@@ -244,14 +244,24 @@
             content: "";
             position: absolute;
             top: -2000px;
-            /* Long enough to cover any scroll */
-            left: 50%;
-            width: 2px;
-            height: 2000px;
-            background: #d1d5db;
-            /* Greyish web line */
+            width: 1.5px;
+            height: 2020px;
+            /* Slight overlap with char */
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            z-index: -1;
+        }
+
+        .char-left-wrap::before {
+            left: 48%;
+            /* Miles alignment */
             transform: translateX(-50%);
-            box-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+        }
+
+        .char-right-wrap::before {
+            left: 52%;
+            /* Gwen alignment */
+            transform: translateX(-50%);
         }
 
         .group:focus-within .char-container {
