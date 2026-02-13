@@ -881,7 +881,7 @@
         <div class="comic-panel mb-8 min-h-[400px] flex flex-col justify-center">
             <div class="comic-panel-bg"></div>
             <div class="jagged-border"></div>
-            <div class="tape"></div>
+
 
             <!-- Input Section -->
             <div id="input-section" class="w-full max-w-lg mx-auto py-8 px-6 relative z-10">
@@ -1002,149 +1002,152 @@
                     </button>
                 </div>
 
-                <!-- SHARE PREVIEW MODAL -->
-                <div id="preview-modal" class="modal-overlay">
-                    <div class="text-center mb-6">
-                        <h2 class="font-bangers text-4xl text-white mb-2 tracking-wide">REPORT PREVIEW</h2>
-                        <div class="flex justify-center flex-col items-center gap-4">
-                            <div id="privacy-toggle" class="tech-toggle" onclick="togglePartnerPrivacy()">
-                                <div class="switch">
-                                    <div class="knob"></div>
-                                </div>
-                                <span class="font-mono text-xs text-white uppercase tracking-widest font-bold">HIDE
-                                    PARTNER NAME</span>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="preview-frame">
-                        <div id="preview-content-wrapper" class="preview-container">
-                            <!-- Share card cloned here -->
-                        </div>
-                    </div>
 
-                    <div class="mt-8 flex gap-4 w-full max-w-sm">
-                        <button onclick="shareResult()"
-                            class="btn-comic flex-1 text-base py-3 bg-miles shadow-[4px_4px_0_#0f0f0f]">
-                            DOWNLOAD JPG
-                        </button>
-                        <button onclick="closeSharePreview()"
-                            class="btn-comic flex-1 text-base py-3 bg-white text-black border-black shadow-[4px_4px_0_#0f0f0f]">
-                            CANCEL
-                        </button>
-                    </div>
-                </div>
-
-                <!-- HIDDEN SHARE CARD (For Capture) -->
-                <div id="share-card-wrapper"
-                    style="position: fixed; top: -9999px; left: -9999px; width: 1080px; height: 1920px; overflow: hidden; pointer-events: none; opacity: 0; z-index: -100;">
-                    <div id="share-card"
-                        class="w-[1080px] h-[1920px] flex flex-col share-grid-bg overflow-hidden text-black relative"
-                        style="font-family: 'Space Mono', monospace;">
-
-                        <!-- CONTENT WRAPPER -->
-                        <div class="z-10 w-full h-full flex flex-col items-center pt-24 pb-20 px-12 relative">
-
-                            <!-- Header -->
-                            <div class="flex flex-col items-center w-full mb-16">
-                                <div
-                                    class="bg-yellow border-[6px] border-black px-12 py-4 transform rotate-1 shadow-[10px_10px_0_#000]">
-                                    <h1 class="font-bangers text-[5rem] text-black leading-none">DropoutHacks</h1>
-                                </div>
-                                <div class="mt-4">
-                                    <span
-                                        class="font-mono text-2xl tracking-[0.4em] text-black/60 uppercase font-bold italic">Official
-                                        Flames Report</span>
-                                </div>
-                            </div>
-
-                            <!-- NAMES SECTION -->
-                            <div class="w-full flex flex-col gap-8 mb-16">
-                                <div class="flex items-center justify-between gap-10">
-                                    <div
-                                        class="flex-1 bg-black border-[5px] border-miles p-10 rounded-2xl transform -rotate-1 shadow-[15px_15px_0_rgba(255,61,94,0.2)]">
-
-                                        <div id="share-name1"
-                                            class="font-bangers text-[5.5rem] text-white leading-none break-words">MILES
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="bg-white border-[5px] border-black rounded-full w-32 h-32 flex items-center justify-center shrink-0 shadow-lg">
-                                        <span class="font-marker text-5xl text-miles">VS</span>
-                                    </div>
-                                    <div
-                                        class="flex-1 bg-black border-[5px] border-gwen p-10 rounded-2xl transform rotate-1 shadow-[15px_15px_0_rgba(0,210,255,0.2)] text-right">
-
-                                        <div class="relative">
-                                            <div id="share-name2"
-                                                class="font-bangers text-[5.5rem] text-white leading-none break-words">
-                                                GWEN</div>
-                                            <div id="share-name2-overlay"
-                                                class="absolute inset-0 flex items-center justify-end font-bangers text-[3.5rem] leading-none text-miles opacity-0 pointer-events-none drop-shadow-[4px_4px_0_#000]">
-                                                Nahi bolna mujhe</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- RESULT VISUALS (From User Image) -->
-                            <div class="w-full flex-grow flex flex-col items-center justify-start gap-16 pt-10">
-
-                                <!-- FLAMES INDICATOR -->
-                                <div id="share-flames-row" class="flex gap-10 justify-center">
-                                    <span id="share-f" class="share-flames-letter">F</span>
-                                    <span id="share-l" class="share-flames-letter">L</span>
-                                    <span id="share-a" class="share-flames-letter">A</span>
-                                    <span id="share-m" class="share-flames-letter">M</span>
-                                    <span id="share-e" class="share-flames-letter">E</span>
-                                    <span id="share-s" class="share-flames-letter">S</span>
-                                </div>
-
-                                <!-- THE BIG RESULT BOX -->
-                                <div class="transform -rotate-2">
-                                    <div class="share-result-box">
-                                        <div id="share-result-word"
-                                            class="font-bangers text-[10rem] text-yellow leading-none uppercase"
-                                            style="-webkit-text-stroke: 4px black; text-shadow: 10px 10px 0px rgba(0,0,0,0.1);">
-                                            FRIENDS</div>
-                                    </div>
-                                </div>
-
-                                <!-- COMPATIBILITY BUBBLE -->
-                                <div class="w-full max-w-2xl mt-10">
-                                    <div class="share-bubble text-center">
-                                        <div id="share-love-pct"
-                                            class="font-bangers text-[6rem] text-miles leading-none mb-6">92%
-                                            COMPATIBILITY</div>
-                                        <div id="share-desc"
-                                            class="font-mono text-3xl font-bold leading-relaxed text-black/80">
-                                            Just homies. Like Miles and Ganke. 🎮 Best buds across the multiverse.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Footer -->
-                            <div class="mt-20 text-center border-t-4 border-black/5 pt-10 w-full">
-                                <div class="font-mono text-xl text-black/40 uppercase tracking-[0.5em] mb-4">Generated
-                                    in the Multiverse</div>
-                                <div class="font-bangers text-[4.5rem] text-black tracking-widest">dropouthacks.tech
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
             </div>
 
         </div>
-
-    </div>
     </div>
 
     <!-- FOOTER -->
     <div class="text-center font-mono text-xs opacity-60">
         <p>BUILT FOR THE MULTIVERSE BY <span class="font-bold">DropoutHacks</span></p>
+    </div>
+
+    <!-- SHARE PREVIEW MODAL -->
+    <div id="preview-modal" class="modal-overlay">
+        <div class="text-center mb-6">
+            <h2 class="font-bangers text-4xl text-white mb-2 tracking-wide">REPORT PREVIEW</h2>
+            <div class="flex justify-center flex-col items-center gap-4">
+                <div id="privacy-toggle" class="tech-toggle" onclick="togglePartnerPrivacy()">
+                    <div class="switch">
+                        <div class="knob"></div>
+                    </div>
+                    <span class="font-mono text-xs text-white uppercase tracking-widest font-bold">HIDE
+                        PARTNER NAME</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="preview-frame">
+            <div id="preview-content-wrapper" class="preview-container">
+                <!-- Share card cloned here -->
+            </div>
+        </div>
+
+        <div class="mt-8 flex gap-4 w-full max-w-sm">
+            <button onclick="shareResult()" class="btn-comic flex-1 text-base py-3 bg-miles shadow-[4px_4px_0_#0f0f0f]">
+                DOWNLOAD JPG
+            </button>
+            <button onclick="closeSharePreview()"
+                class="btn-comic flex-1 text-base py-3 bg-white text-black border-black shadow-[4px_4px_0_#0f0f0f]">
+                CANCEL
+            </button>
+        </div>
+    </div>
+
+    <!-- HIDDEN SHARE CARD (For Capture) -->
+    <div id="share-card-wrapper"
+        style="position: fixed; top: -9999px; left: -9999px; width: 1080px; height: 1920px; overflow: hidden; pointer-events: none; opacity: 0; z-index: -100;">
+        <div id="share-card"
+            class="w-[1080px] h-[1920px] flex flex-col share-grid-bg overflow-hidden text-black relative"
+            style="font-family: 'Space Mono', monospace;">
+
+            <!-- CONTENT WRAPPER -->
+            <div class="z-10 w-full h-full flex flex-col items-center pt-24 pb-20 px-12 relative">
+
+                <!-- Header -->
+                <div class="flex flex-col items-center w-full mb-16">
+                    <div
+                        class="bg-yellow border-[6px] border-black px-12 py-4 transform rotate-1 shadow-[10px_10px_0_#000]">
+                        <h1 class="font-bangers text-[5rem] text-black leading-none">DropoutHacks</h1>
+                    </div>
+                    <div class="mt-4">
+                        <span
+                            class="font-mono text-2xl tracking-[0.4em] text-black/60 uppercase font-bold italic">Official
+                            Flames Report</span>
+
+                    </div>
+                </div>
+
+                <!-- NAMES SECTION -->
+                <div class="w-full flex flex-col gap-8 mb-16">
+                    <div class="flex items-center justify-between gap-10">
+                        <div
+                            class="flex-1 bg-black border-[5px] border-miles p-10 rounded-2xl transform -rotate-1 shadow-[15px_15px_0_rgba(255,61,94,0.2)]">
+
+                            <div id="share-name1"
+                                class="font-bangers text-[5.5rem] text-white leading-none break-words">MILES
+                            </div>
+                        </div>
+                        <div
+                            class="bg-white border-[5px] border-black rounded-full w-32 h-32 flex items-center justify-center shrink-0 shadow-lg">
+                            <span class="font-marker text-5xl text-miles">VS</span>
+                        </div>
+                        <div
+                            class="flex-1 bg-black border-[5px] border-gwen p-10 rounded-2xl transform rotate-1 shadow-[15px_15px_0_rgba(0,210,255,0.2)] text-right">
+
+                            <div class="relative">
+                                <div id="share-name2"
+                                    class="font-bangers text-[5.5rem] text-white leading-none break-words">
+                                    GWEN</div>
+                                <div id="share-name2-overlay"
+                                    class="absolute inset-0 flex items-center justify-end font-bangers text-[3.5rem] leading-none text-miles opacity-0 pointer-events-none drop-shadow-[4px_4px_0_#000]">
+                                    Nahi bolna mujhe</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RESULT VISUALS (From User Image) -->
+                <div class="w-full flex-grow flex flex-col items-center justify-start gap-8 pt-4">
+
+                    <div class="font-bangers text-[3.5rem] text-miles uppercase tracking-wider text-center transform -rotate-1 mb-4"
+                        style="-webkit-text-stroke: 1.5px black; text-shadow: 4px 4px 0px rgba(0,0,0,0.1);">
+                        With Great Power Comes Great Chemistry</div>
+
+                    <!-- FLAMES INDICATOR -->
+                    <div id="share-flames-row" class="flex gap-10 justify-center">
+                        <span id="share-f" class="share-flames-letter">F</span>
+                        <span id="share-l" class="share-flames-letter">L</span>
+                        <span id="share-a" class="share-flames-letter">A</span>
+                        <span id="share-m" class="share-flames-letter">M</span>
+                        <span id="share-e" class="share-flames-letter">E</span>
+                        <span id="share-s" class="share-flames-letter">S</span>
+                    </div>
+
+                    <!-- THE BIG RESULT BOX -->
+                    <div class="transform -rotate-2">
+                        <div class="share-result-box">
+                            <div id="share-result-word"
+                                class="font-bangers text-[10rem] text-yellow leading-none uppercase"
+                                style="-webkit-text-stroke: 4px black; text-shadow: 10px 10px 0px rgba(0,0,0,0.1);">
+                                FRIENDS</div>
+                        </div>
+                    </div>
+
+                    <!-- COMPATIBILITY BUBBLE -->
+                    <div class="w-full max-w-2xl mt-10">
+                        <div class="share-bubble text-center">
+                            <div id="share-love-pct" class="font-bangers text-[6rem] text-miles leading-none mb-6">92%
+                                COMPATIBILITY</div>
+                            <div id="share-desc" class="font-mono text-3xl font-bold leading-relaxed text-black/80">
+                                Just homies. Like Miles and Ganke. 🎮 Best buds across the multiverse.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="mt-20 text-center border-t-4 border-black/5 pt-10 w-full">
+                    <div class="font-mono text-xl text-black/40 uppercase tracking-[0.5em] mb-4">Generated
+                        in the Multiverse</div>
+                    <div class="font-bangers text-[4.5rem] text-black tracking-widest">dropouthacks.tech
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
 
     <script>
