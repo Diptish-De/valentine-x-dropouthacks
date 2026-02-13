@@ -224,46 +224,79 @@
         /* ===== CHARACTER ANIMATIONS ===== */
         .char-img {
             position: absolute;
-            width: 120px;
-            /* Adjust size as needed */
-            top: -100px;
-            /* Start hidden above */
-            z-index: 5;
-            /* Behind input container but above background */
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 140px;
+            /* Slightly larger */
+            top: -160px;
+            /* Hidden far above */
+            z-index: 30;
+            /* Bring IN FRONT of input container now so they overlap slightly if needed, or keeping behind depends on desired look. Let's try OVERLAP for "hanging" effect */
+            transition: all 0.5s cubic-bezier(1.000, 0.005, 0.235, 1.210);
+            /* Bouncy drop */
             opacity: 0;
             pointer-events: none;
         }
 
-        /* Use group-focus-within to trigger animation */
+        /* Hanging Animation Logic */
         .group:focus-within .char-img {
-            top: -90px;
-            /* Peek out */
             opacity: 1;
-            transform: rotate(-5deg);
+            top: -100px;
+            /* Drop down to hang position */
         }
 
-        /* Specific positioning adjustments */
+        /* Spider-Man (Left) - Upside Down Hang */
         .char-left {
-            left: -20px;
-            transform: rotate(-15deg);
+            left: -10px;
+            transform: rotate(180deg);
+            /* Upside down */
+            transform-origin: top center;
         }
 
         .group:focus-within .char-left {
-            top: -110px;
-            /* Slide down/pop up position */
-            transform: rotate(-5deg) scale(1.1);
+            top: -10px;
+            /* Hangs right off the input top edge */
+            transform: rotate(175deg);
+            /* Slight swing */
+            animation: swingLeft 3s infinite ease-in-out;
         }
 
+        /* Gwen (Right) - Upside Down Hang */
         .char-right {
-            right: -20px;
-            transform: rotate(15deg);
+            right: -10px;
+            transform: rotate(180deg) scaleX(-1);
+            /* Upside down + flip for variety */
+            transform-origin: top center;
         }
 
         .group:focus-within .char-right {
-            top: -110px;
-            /* Slide down/pop up position */
-            transform: rotate(5deg) scale(1.1);
+            top: -10px;
+            /* Hangs right off the input top edge */
+            transform: rotate(185deg) scaleX(-1);
+            /* Slight swing */
+            animation: swingRight 3s infinite ease-in-out;
+        }
+
+        @keyframes swingLeft {
+
+            0%,
+            100% {
+                transform: rotate(175deg);
+            }
+
+            50% {
+                transform: rotate(185deg);
+            }
+        }
+
+        @keyframes swingRight {
+
+            0%,
+            100% {
+                transform: rotate(185deg) scaleX(-1);
+            }
+
+            50% {
+                transform: rotate(175deg) scaleX(-1);
+            }
         }
 
 
@@ -569,9 +602,9 @@
             <div id="input-section" class="w-full max-w-lg mx-auto py-8 px-6 relative z-10">
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-end">
-                    <!-- Name 1 - Spider-Man Animation -->
+                    <!-- Name 1 - Spider-Man Animation (Hanging) -->
                     <div class="relative group">
-                        <!-- Character Image: Hidden by default, slides down on focus -->
+                        <!-- Character Image: Hidden by default, hangs down on focus -->
                         <img src="assets/spiderman.png" alt="Spider-Man" class="char-img char-left">
 
                         <label
@@ -583,9 +616,9 @@
                         </div>
                     </div>
 
-                    <!-- Name 2 - Gwen Stacy Animation -->
+                    <!-- Name 2 - Gwen Stacy Animation (Hanging) -->
                     <div class="relative group">
-                        <!-- Character Image: Hidden by default, slides down on focus -->
+                        <!-- Character Image: Hidden by default, hangs down on focus -->
                         <img src="assets/gwen.png" alt="Gwen Stacy" class="char-img char-right">
 
                         <label
