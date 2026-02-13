@@ -229,27 +229,30 @@
         /* ===== CHARACTER ANIMATIONS ===== */
         .char-container {
             position: absolute;
-            width: 120px;
-            top: -400px;
-            z-index: 20;
-            transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: 140px;
+            top: -600px;
+            /* Start far above */
+            z-index: 50;
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             opacity: 0;
             pointer-events: none;
             transform-origin: top center;
         }
 
-        /* Web Line
+        /* Web Line */
         .char-container::before {
             content: "";
             position: absolute;
-            top: -1000px;
+            top: -2000px;
+            /* Long enough to cover any scroll */
             left: 50%;
             width: 2px;
-            height: 1000px;
-            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.5));
+            height: 2000px;
+            background: #d1d5db;
+            /* Greyish web line */
             transform: translateX(-50%);
-            box-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
-        } */
+            box-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+        }
 
         .group:focus-within .char-container {
             opacity: 1;
@@ -257,35 +260,53 @@
 
         /* Miles Logic */
         .char-left-wrap {
-            left: -70px;
+            left: -30px;
         }
 
         .group:focus-within .char-left-wrap {
-            top: -80px;
-            /* Hanging lower as per image */
+            top: -140px;
+            /* Hanging visibly over "HE" */
             animation: swingLeft 4s infinite ease-in-out;
         }
 
         /* Gwen Logic */
         .char-right-wrap {
-            right: -80px;
+            right: -30px;
         }
 
         .group:focus-within .char-right-wrap {
-            top: -80px;
+            top: -140px;
+            /* Hanging visibly over "SHE" */
             animation: swingRight 4s infinite ease-in-out;
+        }
+
+        /* Mobile Adjustments for Characters */
+        @media (max-width: 768px) {
+            .char-container {
+                width: 110px;
+            }
+
+            .char-left-wrap {
+                left: 0px;
+            }
+
+            .char-right-wrap {
+                right: 0px;
+            }
+
+            .group:focus-within .char-left-wrap,
+            .group:focus-within .char-right-wrap {
+                top: -100px;
+            }
         }
 
         .char-img {
             width: 100%;
             height: auto;
-            transform: rotate(180deg);
+            filter: drop-shadow(0 10px 10px rgba(0, 0, 0, 0.2));
         }
 
-        .char-left {
-            transform: rotate(0deg) !important;
-        }
-
+        .char-left,
         .char-right {
             transform: rotate(0deg) !important;
         }
