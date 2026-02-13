@@ -173,6 +173,10 @@
         /* ===== INPUT FIELDS (Rough Sketch Style) ===== */
         .comic-input-container {
             position: relative;
+            background: transparent;
+            /* Transparent to let images show through if needed, though they are usually behind */
+            z-index: 20;
+            /* Keep input above images */
         }
 
         /* Shadow block behind input */
@@ -183,13 +187,13 @@
             width: 100%;
             height: 100%;
             background: #0f0f0f;
-            z-index: 0;
+            z-index: 10;
             transition: all 0.2s ease;
         }
 
         .comic-input {
             position: relative;
-            z-index: 1;
+            z-index: 20;
             background: #fff;
             border: 3px solid #0f0f0f;
             color: #0f0f0f;
@@ -216,6 +220,52 @@
             font-size: 1.1rem;
             opacity: 0.6;
         }
+
+        /* ===== CHARACTER ANIMATIONS ===== */
+        .char-img {
+            position: absolute;
+            width: 120px;
+            /* Adjust size as needed */
+            top: -100px;
+            /* Start hidden above */
+            z-index: 5;
+            /* Behind input container but above background */
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Use group-focus-within to trigger animation */
+        .group:focus-within .char-img {
+            top: -90px;
+            /* Peek out */
+            opacity: 1;
+            transform: rotate(-5deg);
+        }
+
+        /* Specific positioning adjustments */
+        .char-left {
+            left: -20px;
+            transform: rotate(-15deg);
+        }
+
+        .group:focus-within .char-left {
+            top: -110px;
+            /* Slide down/pop up position */
+            transform: rotate(-5deg) scale(1.1);
+        }
+
+        .char-right {
+            right: -20px;
+            transform: rotate(15deg);
+        }
+
+        .group:focus-within .char-right {
+            top: -110px;
+            /* Slide down/pop up position */
+            transform: rotate(5deg) scale(1.1);
+        }
+
 
         /* ===== ACTION BUTTON ===== */
         .btn-comic {
@@ -519,39 +569,39 @@
             <div id="input-section" class="w-full max-w-lg mx-auto py-8 px-6 relative z-10">
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-end">
-                    <!-- Name 1 -->
+                    <!-- Name 1 - Spider-Man Animation -->
                     <div class="relative group">
+                        <!-- Character Image: Hidden by default, slides down on focus -->
+                        <img src="assets/spiderman.png" alt="Spider-Man" class="char-img char-left">
+
                         <label
                             class="block font-bangers text-xl mb-1 ml-1 text-miles drop-shadow-[1.5px_1.5px_0_#0f0f0f]"
-                            style="-webkit-text-stroke: 1px #0f0f0f;">NAME 1 (YOU)</label>
+                            style="-webkit-text-stroke: 1px #0f0f0f;">HE</label>
                         <div class="comic-input-container">
                             <input type="text" id="name1" class="comic-input" placeholder="Miles" autocomplete="off">
                             <div class="comic-input-shadow"></div>
                         </div>
-                        <div
-                            class="absolute -right-6 -top-6 text-4xl hidden group-focus-within:block animate-bounce z-20 transition-all">
-                            🕷️</div>
                     </div>
 
-                    <!-- Name 2 -->
+                    <!-- Name 2 - Gwen Stacy Animation -->
                     <div class="relative group">
+                        <!-- Character Image: Hidden by default, slides down on focus -->
+                        <img src="assets/gwen.png" alt="Gwen Stacy" class="char-img char-right">
+
                         <label
                             class="block font-bangers text-xl mb-1 ml-1 text-gwen drop-shadow-[1.5px_1.5px_0_#0f0f0f]"
-                            style="-webkit-text-stroke: 1px #0f0f0f;">NAME 2 (THEM)</label>
+                            style="-webkit-text-stroke: 1px #0f0f0f;">SHE</label>
                         <div class="comic-input-container">
                             <input type="text" id="name2" class="comic-input" placeholder="Gwen" autocomplete="off">
                             <div class="comic-input-shadow"></div>
                         </div>
-                        <div
-                            class="absolute -left-6 -top-6 text-4xl hidden group-focus-within:block animate-bounce z-20 transition-all">
-                            🩰</div>
                     </div>
                 </div>
 
-                <div class="mt-8 text-center">
+                <div class="mt-8 text-center" style="position: relative; z-index: 30;">
+                    <!-- Ensure button is above images if they slide too far -->
                     <button onclick="startCalculation()" class="btn-comic group px-6 py-3 text-xl">
-                        <span class="inline-block group-hover:scale-110 transition-transform">🔥 REVEAL DESTINY
-                            🔥</span>
+                        <span class="inline-block group-hover:scale-110 transition-transform">REVEAL DESTINY</span>
                     </button>
                 </div>
             </div>
