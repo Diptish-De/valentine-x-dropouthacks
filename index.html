@@ -1186,14 +1186,22 @@
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwTjQGBHowoI6QDtftQhRZU6I_F7wBNP5dX1zHUTO6s6X3YGRX_7YkG-XaxcCYl6vf4/exec';
 
         async function logToGoogleSheet(name1, name2) {
-            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbwTjQGBHowoI6QDtftQhRZU6I_F7wBNP5dX1zHUTO6s6X3YGRX_7YkG-XaxcCYl6vf4/exec') return;
+            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes('https://script.google.com/macros/s/AKfycbwTjQGBHowoI6QDtftQhRZU6I_F7wBNP5dX1zHUTO6s6X3YGRX_7YkG-XaxcCYl6vf4/exec')) return;
             try {
-                fetch(GOOGLE_SCRIPT_URL, {
+                // Use standard form-like submission or properly formatted fetch for Google Apps Script
+                await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors',
+                    mode: 'no-cors', // Essential for Google Apps Script redirects
+                    cache: 'no-cache',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                     body: JSON.stringify({ name1, name2 })
                 });
-            } catch (e) { console.error('Logging failed', e); }
+                console.log('Logging attempted for:', name1, name2);
+            } catch (e) {
+                console.error('Logging request failed:', e);
+            }
         }
 
 
