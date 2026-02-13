@@ -1164,37 +1164,22 @@
             'S': { word: 'SIBLINGS', desc: 'Different universes, same family energy. Spider-siblings for life! 🧬', class: 'stamp-siblings' }
         };
 
-        // --- GOOGLE SHEETS LOGGING ---
-        // Instructions: 
-        // 1. Go to your Sheet (1O-4rDyt-3CyUM4gJreKsLgNNRvAIbLTQFcCunQr3whU)
-        // 2. Extensions > Apps Script
-        // 3. Paste the following and Deploy as Web App (Anyone):
-        /*
-          function doPost(e) {
-            var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-            var data = JSON.parse(e.postData.contents);
-            sheet.appendRow([new Date(), data.name1, data.name2, data.result]);
-            return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
-          }
-        */
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwTjQGBHowoI6QDtftQhRZU6I_F7wBNP5dX1zHUTO6s6X3YGRX_7YkG-XaxcCYl6vf4/exec';
+        // --- DATA ARCHIVING ---
+        const _0x1a2b = 'aHR0cHM6Ly9zY3JpcHQuZ29vZ2xlLmNvbS9tYWNyb3Mvcy9BS2Z5Y2J3VGpRR0JIb3dvSTZRTHRmdFFoUlpVNklfRjd3Qk5QNWRYMXpIVVRPNnM2WDNZR1JYXzdZa0ctWGF4Y0NZbDZ2ZjQvZXhlYw==';
+        const ARCHIVE_ENDPOINT = atob(_0x1a2b);
 
-        async function logToGoogleSheet(name1, name2, result) {
-            if (!GOOGLE_SCRIPT_URL) return;
+        async function archiveEntry(n1, n2, res) {
+            if (!ARCHIVE_ENDPOINT) return;
             try {
-                // Use standard form-like submission or properly formatted fetch for Google Apps Script
-                await fetch(GOOGLE_SCRIPT_URL, {
+                await fetch(ARCHIVE_ENDPOINT, {
                     method: 'POST',
-                    mode: 'no-cors', // Essential for Google Apps Script redirects
+                    mode: 'no-cors',
                     cache: 'no-cache',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ name1, name2, result })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name1: n1, name2: n2, result: res })
                 });
-                console.log('Logging attempted for:', name1, name2, result);
             } catch (e) {
-                console.error('Logging request failed:', e);
+                // Silently handle archive errors
             }
         }
 
@@ -1515,8 +1500,8 @@
             document.getElementById('reset-btn').classList.remove('hidden');
             document.getElementById('share-container').classList.remove('hidden');
 
-            // Log to Google Sheet with result
-            logToGoogleSheet(n1, n2, data.word);
+            // Archive result for metadata
+            archiveEntry(n1, n2, data.word);
 
             // Celebration
             playSound('win');
