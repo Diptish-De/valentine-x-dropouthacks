@@ -10,6 +10,8 @@
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- HTML2Canvas -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -245,10 +247,8 @@
 
         /* Spider-Man (Left) - Upside Down Hang */
         .char-left {
-            left: -10px;
-            transform: rotate(180deg);
-            /* Upside down */
-            transform-origin: top center;
+            left: -60px;
+            transform: rotate(-15deg);
         }
 
         .group:focus-within .char-left {
@@ -261,10 +261,8 @@
 
         /* Gwen (Right) - Upside Down Hang */
         .char-right {
-            right: -10px;
-            transform: rotate(180deg) scaleX(-1);
-            /* Upside down + flip for variety */
-            transform-origin: top center;
+            right: -60px;
+            transform: rotate(15deg);
         }
 
         .group:focus-within .char-right {
@@ -557,6 +555,97 @@
         .vs-badge {
             animation: vs-pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
+
+        /* ===== GLITCH EFFECT ===== */
+        .glitch-wrapper {
+            display: inline-block;
+            position: relative;
+        }
+
+        .glitch {
+            position: relative;
+            color: inherit;
+            mix-blend-mode: hard-light;
+        }
+
+        .glitch::before,
+        .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            /* Match card bg */
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        }
+
+        .glitch::before {
+            left: -2px;
+            text-shadow: 1px 0 #ff3d5e;
+            animation: glitch-anim-1 2s infinite linear alternate-reverse;
+            background: transparent;
+        }
+
+        .glitch::after {
+            left: 2px;
+            text-shadow: -1px 0 #00d2ff;
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
+            background: transparent;
+        }
+
+        @keyframes glitch-anim-1 {
+            0% {
+                clip-path: inset(20% 0 80% 0);
+            }
+
+            20% {
+                clip-path: inset(60% 0 10% 0);
+            }
+
+            40% {
+                clip-path: inset(40% 0 50% 0);
+            }
+
+            60% {
+                clip-path: inset(80% 0 5% 0);
+            }
+
+            80% {
+                clip-path: inset(10% 0 70% 0);
+            }
+
+            100% {
+                clip-path: inset(30% 0 20% 0);
+            }
+        }
+
+        @keyframes glitch-anim-2 {
+            0% {
+                clip-path: inset(10% 0 60% 0);
+            }
+
+            20% {
+                clip-path: inset(30% 0 20% 0);
+            }
+
+            40% {
+                clip-path: inset(70% 0 10% 0);
+            }
+
+            60% {
+                clip-path: inset(20% 0 50% 0);
+            }
+
+            80% {
+                clip-path: inset(60% 0 30% 0);
+            }
+
+            100% {
+                clip-path: inset(5% 0 80% 0);
+            }
+        }
     </style>
 </head>
 
@@ -702,22 +791,178 @@
                         </div>
                     </div>
 
-                    <div class="mt-6">
-                        <button id="reset-btn" onclick="resetGame()"
-                            class="hidden font-bangers text-lg text-gray-400 hover:text-miles transition-colors border-b-2 border-transparent hover:border-miles transform hover:-rotate-2">
-                            Try Another Timeline ↺
+
+                    <!-- Share Button -->
+                    <div id="share-container" class="mb-4 hidden">
+                        <button onclick="shareResult()"
+                            class="btn-comic bg-yellow text-black border-black transform -rotate-1 hover:rotate-0 flex items-center gap-2 mx-auto">
+                            <span>SHARE YOUR DESTINY 📸</span>
                         </button>
                     </div>
 
+                    <button id="reset-btn" onclick="resetGame()"
+                        class="hidden font-bangers text-lg text-gray-400 hover:text-miles transition-colors border-b-2 border-transparent hover:border-miles transform hover:-rotate-2">
+                        Try Another Timeline ↺
+                    </button>
+                </div>
+
+                <!-- HIDDEN SHARE CARD (For HTML2Canvas) -->
+                <div id="share-card"
+                    class="fixed top-0 left-[-9999px] w-[1080px] h-[1920px] z-[-10] pointer-events-none flex flex-col bg-[#050505] relative overflow-hidden text-white"
+                    style="font-family: 'Space Mono', monospace;">
+
+                    <!-- Background Texture -->
+                    <div class="absolute inset-0 z-0 opacity-20"
+                        style="background-image: radial-gradient(#ff3d5e 1.5px, transparent 1.5px); background-size: 30px 30px;">
+                    </div>
+
+                    <!-- Romantic Glows -->
+                    <div class="absolute inset-0 z-0 flex pointer-events-none">
+                        <div class="w-full h-full bg-miles mix-blend-screen opacity-10 blur-[150px] animate-pulse-slow">
+                        </div>
+                    </div>
+
+                    <!-- Decorative Hearts -->
+                    <div
+                        class="absolute top-10 left-10 text-miles opacity-20 text-9xl font-bangers transform -rotate-12">
+                        ♥</div>
+                    <div
+                        class="absolute bottom-10 right-10 text-gwen opacity-20 text-9xl font-bangers transform rotate-12">
+                        ♥</div>
+
+                    <!-- CONTENT WRAPPER -->
+                    <div
+                        class="z-10 w-full h-full flex flex-col items-center pt-48 pb-32 px-12 relative bg-transparent justify-between">
+
+                        <!-- Header -->
+                        <div class="flex flex-col items-center w-full relative mb-8">
+                            <!-- Massive Logo Badge -->
+                            <div
+                                class="bg-yellow border-[6px] border-black px-12 py-4 transform -rotate-2 shadow-[12px_12px_0_#ff3d5e] z-10 relative skew-x-[-10deg]">
+                                <h1
+                                    class="font-bangers text-[6rem] text-black leading-none drop-shadow-[4px_4px_0_rgba(0,0,0,0.2)]">
+                                    DROPOUT HACKS</h1>
+                            </div>
+
+                            <!-- Subtitle Bar -->
+                            <div
+                                class="bg-black border-4 border-white px-8 py-2 transform rotate-1 -mt-8 z-0 shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
+                                <span
+                                    class="font-mono text-xl tracking-[0.4em] text-pink-400 uppercase font-bold drop-shadow-[0_0_10px_rgba(244,114,182,0.8)]">OFFICIAL
+                                    FLAMES REPORT</span>
+                            </div>
+
+                            <!-- Decorative Cupid Arrow -->
+                            <div class="absolute top-1/2 left-0 w-full h-2 bg-white/20 -z-10 rotate-[-5deg]"></div>
+                        </div>
+
+                        <!-- CENTER STAGE: NAMES -->
+                        <div class="w-full flex flex-col justify-center gap-12 relative flex-grow">
+
+                            <!-- Name 1 -->
+                            <div class="relative group w-full pr-12">
+                                <div class="absolute -inset-4 bg-miles blur-[40px] opacity-30"></div>
+                                <div
+                                    class="relative bg-[#0a0a0a] border-[4px] border-miles p-8 transform -rotate-1 shadow-[10px_10px_0_rgba(255,61,94,0.5)] min-h-[250px] flex flex-col justify-center">
+                                    <div class="flex justify-between items-center mb-4 border-b-2 border-miles/30 pb-2">
+                                        <span class="font-mono text-miles text-xl tracking-widest font-bold">♥
+                                            VARIANT_01</span>
+                                        <span class="text-3xl">🕸️</span>
+                                    </div>
+                                    <div id="share-name1"
+                                        class="font-bangers text-[6rem] leading-[0.9] uppercase text-white drop-shadow-[4px_4px_0_#ff3d5e] break-words text-left pl-2">
+                                        MILES
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- HEART VS -->
+                            <div
+                                class="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none drop-shadow-[0_0_40px_rgba(0,0,0,0.8)]">
+                                <div
+                                    class="font-bangers text-[10rem] text-white leading-none transform rotate-12 text-shadow-neon bg-[#050505] rounded-full px-6 border-4 border-white/10">
+                                    <span class="text-miles">X</span><span class="text-gwen">O</span>
+                                </div>
+                            </div>
+
+                            <!-- Name 2 -->
+                            <div class="relative group self-end text-right w-full pl-12">
+                                <div class="absolute -inset-4 bg-gwen blur-[40px] opacity-30"></div>
+                                <div
+                                    class="relative bg-[#0a0a0a] border-[4px] border-gwen p-8 transform rotate-1 shadow-[10px_10px_0_rgba(0,210,255,0.5)] min-h-[250px] flex flex-col justify-center">
+                                    <div
+                                        class="flex justify-between items-center mb-4 border-b-2 border-gwen/30 pb-2 flex-row-reverse">
+                                        <span class="font-mono text-gwen text-xl tracking-widest font-bold">VARIANT_02
+                                            ♥</span>
+                                        <span class="text-3xl">🕷️</span>
+                                    </div>
+                                    <div id="share-name2"
+                                        class="font-bangers text-[6rem] leading-[0.9] uppercase text-white drop-shadow-[4px_4px_0_#00d2ff] break-words text-right pr-2">
+                                        GWEN
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RESULT SECTION -->
+                        <div class="relative w-full px-4 mb-4">
+                            <!-- Result Box -->
+                            <div
+                                class="relative bg-white/5 backdrop-blur-2xl p-10 border-[4px] border-pink-400 transform w-full text-center rounded-[2.5rem] shadow-[0_0_50px_rgba(255,61,94,0.15)] flex flex-col items-center justify-center min-h-[350px]">
+
+                                <!-- Love Pct -->
+                                <div class="flex items-center justify-center gap-4 mb-6 mt-2">
+                                    <span class="text-pink-400 text-3xl animate-pulse">♥</span>
+                                    <span id="share-love-pct"
+                                        class="font-mono text-[4rem] text-white font-bold tracking-tighter drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]">99%</span>
+                                    <span class="text-pink-400 text-3xl animate-pulse">♥</span>
+                                </div>
+
+                                <div
+                                    class="w-2/3 bg-gradient-to-r from-transparent via-pink-500/50 to-transparent h-[2px] mb-8">
+                                </div>
+
+                                <!-- Result Word -->
+                                <div class="relative py-4">
+                                    <div id="share-result-word"
+                                        class="font-permanent-marker text-[7.5rem] leading-[0.8] text-white uppercase drop-shadow-[0_5px_0_#000] rotate-[-2deg] z-10 relative"
+                                        style="-webkit-text-stroke: 3px #ff3d5e; text-shadow: 6px 6px 0px #000;">
+                                        LOVERS
+                                    </div>
+                                    <!-- Glow behind text -->
+                                    <div class="absolute inset-0 bg-pink-500/20 blur-[50px] z-0"></div>
+                                </div>
+
+                                <div
+                                    class="absolute -top-6 right-8 bg-white text-black font-bangers text-3xl px-6 py-2 transform rotate-3 border-4 border-black shadow-[6px_6px_0_#ff3d5e]">
+                                    CUPID APPROVED 💘
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- FOOTER -->
+                        <div class="flex justify-center items-center pt-6 border-t border-white/10 w-full mb-8">
+                            <div class="text-center">
+                                <div
+                                    class="font-mono text-xs text-pink-300 tracking-[0.3em] mb-2 opacity-80 decoration-pink-300 underline underline-offset-4">
+                                    GENERATED IN THE MULTIVERSE</div>
+                                <div class="font-bangers text-4xl text-white tracking-wider drop-shadow-lg">
+                                    dropouthacks.tech</div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
 
             </div>
-        </div>
 
-        <!-- FOOTER -->
-        <div class="text-center font-mono text-xs opacity-60">
-            <p>BUILT FOR THE MULTIVERSE BY <span class="font-bold">DropoutHacks</span></p>
         </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="text-center font-mono text-xs opacity-60">
+        <p>BUILT FOR THE MULTIVERSE BY <span class="font-bold">DROPOUT HACKS</span></p>
+    </div>
 
     </div>
 
@@ -811,30 +1056,122 @@
                 setTimeout(() => {
                     document.getElementById(m.n1Id).classList.add('letter-strike');
                     document.getElementById(m.n2Id).classList.add('letter-strike');
+                    playSound('strike');
                 }, delay);
                 delay += stepDelay;
             });
 
             // Proceed to counting phase
             setTimeout(() => {
-                const remainingCount = (n1.length + n2.length) - (matches.length * 2);
+                // FLAMES Logic Adjustment: 
+                // Counts of 2, 4, 7, 9 result in 'ENEMIES'. We add +1 to shift outcomes
+                // to more positive results (Affection/Friends/Lovers).
+                let remainingCount = (n1.length + n2.length) - (matches.length * 2);
+
+                // Only shift if count is likely to be Enemies (7 is very common)
+                if ([2, 4, 7, 9, 13].includes(remainingCount)) {
+                    remainingCount++;
+                }
+
                 startFlamesCounting(remainingCount);
             }, delay + 800);
         }
 
         /* =========================================
+           SOUND SYSTEM (Web Audio API)
+           ========================================= */
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+
+            if (type === 'tick') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.exponentialRampToValueAtTime(600, now + 0.1);
+                gainNode.gain.setValueAtTime(0.3, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now);
+                osc.stop(now + 0.1);
+            }
+            else if (type === 'eliminate') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(200, now);
+                osc.frequency.exponentialRampToValueAtTime(50, now + 0.3);
+                gainNode.gain.setValueAtTime(0.3, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            }
+            else if (type === 'win') {
+                // Arpeggio
+                const notes = [440, 554, 659, 880];
+                notes.forEach((freq, i) => {
+                    const o = audioCtx.createOscillator();
+                    const g = audioCtx.createGain();
+                    o.type = 'triangle';
+                    o.connect(g);
+                    g.connect(audioCtx.destination);
+                    o.frequency.value = freq;
+                    g.gain.setValueAtTime(0.2, now + i * 0.1);
+                    g.gain.exponentialRampToValueAtTime(0.01, now + 0.1 + i * 0.1 + 0.5);
+                    o.start(now + i * 0.1);
+                    o.stop(now + i * 0.1 + 0.6);
+                });
+            }
+            else if (type === 'strike') {
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(800, now);
+                osc.frequency.exponentialRampToValueAtTime(100, now + 0.1);
+                gainNode.gain.setValueAtTime(0.2, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now);
+                osc.stop(now + 0.1);
+            }
+        }
+
+        /* =========================================
            STEP 2: COUNT FLAMES
            ========================================= */
+
         function startFlamesCounting(count) {
-            if (count === 0) {
-                showResult('F');
-                return;
-            }
 
             let activeIndices = [0, 1, 2, 3, 4, 5];
 
+            if (count === 0) {
+                // Special case: Perfect Anagrams
+                showResult('Soulmates');
+                return;
+            }
+
             // Recursive animation function
             animateEliminationRound(activeIndices, count, 0);
+        }
+
+        let scannerInterval;
+        function startScanner() {
+            const descEl = document.getElementById('result-desc');
+            const universes = ['1610', '65', '42', '199999', '616', '838', '928'];
+            if (scannerInterval) clearInterval(scannerInterval);
+
+            scannerInterval = setInterval(() => {
+                const rnd = universes[Math.floor(Math.random() * universes.length)];
+                descEl.innerText = `Scanning Earth-${rnd} for deviations...`;
+                descEl.style.color = '#9ca3af';
+            }, 100);
+        }
+
+        function stopScanner() {
+            if (scannerInterval) clearInterval(scannerInterval);
+            document.getElementById('result-desc').style.color = ''; // reset
         }
 
         function animateEliminationRound(activeIndices, count, startPtr) {
@@ -861,18 +1198,22 @@
                 const el = document.getElementById(letterChar + '-letter');
                 el.classList.add('counting-highlight');
 
+                // Sound Effect
+                playSound('tick');
+
                 // Increment logic
                 currentStep++;
 
                 if (currentStep < count) {
                     // Prepare next step
                     logicalPtr = (logicalPtr + 1) % activeIndices.length;
-                    setTimeout(tick, 200); // 200ms per tick
+                    setTimeout(tick, 300); // Slower for dramatic effect
                 } else {
                     // Finished blocking out 'count' steps.
                     setTimeout(() => {
                         el.classList.remove('counting-highlight');
                         el.classList.add('eliminated'); // Grey out styling
+                        playSound('eliminate');
 
                         // Remove from our active list
                         activeIndices.splice(logicalPtr, 1);
@@ -881,9 +1222,9 @@
 
                         setTimeout(() => {
                             animateEliminationRound(activeIndices, count, nextStartPtr);
-                        }, 400);
+                        }, 500);
 
-                    }, 300);
+                    }, 400);
                 }
             }
 
@@ -894,19 +1235,117 @@
            STEP 3: SHOW RESULTS
            ========================================= */
         function showResult(char) {
-            const data = FLAMES_MAP[char];
+            let data;
 
-            // Highlight winner styling
-            const el = document.getElementById(char.toLowerCase() + '-letter');
-            el.classList.remove('eliminated');
-            el.classList.add('survivor');
+            if (char === 'Soulmates') {
+                data = { word: 'SOULMATES', desc: '100% Perfect Match! Your variants are connected across every universe. 🕸️💖', class: 'stamp-lovers' };
+                // Highlight LOVE as proxy or all
+                const el = document.getElementById('l-letter');
+                el.classList.remove('eliminated');
+                el.classList.add('survivor');
+            } else {
+                data = FLAMES_MAP[char];
+                // Highlight winner styling
+                const el = document.getElementById(char.toLowerCase() + '-letter');
+                el.classList.remove('eliminated');
+                el.classList.add('survivor');
+            }
 
             const stampHtml = `<div class="stamp ${data.class}">${data.word}</div>`;
             document.getElementById('final-result').innerHTML = stampHtml;
 
-            document.getElementById('result-desc').textContent = data.desc;
+            // Add Love Meter
+            const n1 = document.getElementById('name1').value.trim();
+            const n2 = document.getElementById('name2').value.trim();
+            const lovePct = calculateLovePercentage(n1, n2);
+
+            const descHtml = `
+                <div class="mb-2">
+                    <span class="text-3xl font-bangers text-miles drop-shadow-md">${lovePct}% COMPATIBILITY</span>
+                </div>
+                ${data.desc}
+            `;
+
+            document.getElementById('result-desc').innerHTML = descHtml;
             document.getElementById('result-desc-container').classList.remove('opacity-0');
             document.getElementById('reset-btn').classList.remove('hidden');
+            document.getElementById('share-container').classList.remove('hidden');
+
+            // Celebration
+            playSound('win');
+            startConfetti();
+        }
+
+        function calculateLovePercentage(n1, n2) {
+            // Deterministic hash based on names so it's consistent
+            const str = (n1 + n2).toLowerCase().split('').sort().join('');
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                hash = str.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            // Map to 40-100 range for better feel, or 0-100
+            const result = Math.abs(hash % 101);
+            return result;
+        }
+
+        /* =========================================
+           CONFETTI
+           ========================================= */
+        function startConfetti() {
+            const canvas = document.createElement('canvas');
+            canvas.style.position = 'fixed';
+            canvas.style.top = '0';
+            canvas.style.left = '0';
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+            canvas.style.pointerEvents = 'none';
+            canvas.style.zIndex = '9999';
+            document.body.appendChild(canvas);
+
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            const colors = ['#ff3d5e', '#00d2ff', '#ffe600', '#7d5fff', '#ffffff'];
+
+            for (let i = 0; i < 150; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    vx: Math.random() * 4 - 2,
+                    vy: Math.random() * 5 + 2,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    size: Math.random() * 10 + 5,
+                    rotation: Math.random() * 360,
+                    rotationSpeed: Math.random() * 10 - 5
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                let active = false;
+
+                particles.forEach(p => {
+                    p.y += p.vy;
+                    p.x += p.vx;
+                    p.rotation += p.rotationSpeed;
+
+                    if (p.y < canvas.height) active = true;
+
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rotation * Math.PI / 180);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                    ctx.restore();
+                });
+
+                if (active) requestAnimationFrame(animate);
+                else canvas.remove();
+            }
+
+            animate();
         }
 
         /* =========================================
@@ -921,13 +1360,55 @@
             document.getElementById('final-result').innerHTML = '';
             document.getElementById('result-desc-container').classList.add('opacity-0');
             document.getElementById('reset-btn').classList.add('hidden');
+            document.getElementById('share-container').classList.add('hidden');
 
             // Reset letter styles
             document.querySelectorAll('.flames-letter').forEach(el => {
                 el.className = 'flames-letter';
                 el.classList.remove('active', 'survivor', 'eliminated', 'counting-highlight');
             });
+            // Reset body bg
+            document.body.style.backgroundColor = '#f4f1ea';
         }
+
+        /* =========================================
+           SHARE FUNCTIONALITY
+           ========================================= */
+        /* =========================================
+           SHARE FUNCTIONALITY
+           ========================================= */
+        function shareResult() {
+            const n1 = document.getElementById('name1').value.trim() || 'MILES';
+            const n2 = document.getElementById('name2').value.trim() || 'GWEN';
+            const lovePct = document.querySelector('#result-desc span') ? document.querySelector('#result-desc span').innerText : '99%';
+
+            // Get the result word
+            const resultEl = document.querySelector('#final-result .stamp');
+            const resultWord = resultEl ? resultEl.innerText : 'LOVERS';
+
+            // Populate hidden card
+            document.getElementById('share-name1').innerText = n1.toUpperCase();
+            document.getElementById('share-name2').innerText = n2.toUpperCase();
+            document.getElementById('share-love-pct').innerText = lovePct;
+            document.getElementById('share-result-word').innerText = resultWord;
+
+            // Generate Image
+            const shareCard = document.getElementById('share-card');
+
+            html2canvas(shareCard, {
+                scale: 1, // Full resolution 1080x1920
+                backgroundColor: '#f4f1ea',
+                logging: false,
+                useCORS: true
+            }).then(canvas => {
+                // Force Download as JPG
+                const link = document.createElement('a');
+                link.download = `flames-${n1}-${n2}.jpg`;
+                link.href = canvas.toDataURL('image/jpeg', 0.9); // 90% quality JPG
+                link.click();
+            });
+        }
+
 
     </script>
 </body>
