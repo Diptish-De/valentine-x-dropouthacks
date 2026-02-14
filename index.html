@@ -621,15 +621,15 @@
 
             0%,
             100% {
-                transform: scale(1) rotate(12deg);
+                transform: scale(1);
             }
 
             50% {
-                transform: scale(1.2) rotate(8deg);
+                transform: scale(1.2);
             }
         }
 
-        .vs-badge {
+        .brand-blip {
             animation: vs-pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
 
@@ -935,7 +935,7 @@
         </div>
 
         <!-- GAME PANEL: More compact, overflow visible -->
-        <div class="comic-panel mb-8 min-h-[400px] flex flex-col justify-center">
+        <div class="comic-panel mb-8 min-h-[300px] md:min-h-[400px] flex flex-col justify-center">
             <div class="comic-panel-bg"></div>
             <div class="jagged-border"></div>
 
@@ -986,11 +986,11 @@
             </div>
 
             <!-- Calculation / Result Section -->
-            <div id="calc-section" class="hidden flex flex-col w-full h-full py-6 px-4 relative z-10">
+            <div id="calc-section" class="hidden flex flex-col w-full h-full py-4 md:py-6 px-4 relative z-10">
 
                 <!-- SPLIT NAMES DISPLAY -->
                 <div
-                    class="flex flex-col md:flex-row justify-between items-center md:items-start gap-4 mb-8 w-full border-b-4 border-black/10 pb-6 border-dashed">
+                    class="flex flex-col md:flex-row justify-between items-center md:items-start gap-2 md:gap-4 mb-4 md:mb-8 w-full border-b-4 border-black/10 pb-4 md:pb-6 border-dashed">
 
                     <!-- Name 1 (Left) -->
                     <div class="text-center w-full md:w-5/12">
@@ -1003,7 +1003,7 @@
                     </div>
 
                     <!-- VS Divider -->
-                    <div class="font-marker text-4xl text-yellow rotate-12 drop-shadow-[3px_3px_0_#0f0f0f] self-center vs-badge mx-2"
+                    <div class="font-marker text-4xl text-miles drop-shadow-[3px_3px_0_#0f0f0f] self-center mx-2"
                         style="-webkit-text-stroke: 2px #0f0f0f;">VS</div>
 
                     <!-- Name 2 (Right) -->
@@ -1020,13 +1020,18 @@
                 <!-- FLAMES Display -->
                 <div class="flex-grow flex flex-col items-center justify-center w-full">
 
-                    <div id="flames-container" class="flex flex-wrap justify-center gap-2 md:gap-4 mb-6 select-none">
-                        <span id="f-letter" class="flames-letter">F</span>
-                        <span id="l-letter" class="flames-letter">L</span>
-                        <span id="a-letter" class="flames-letter">A</span>
-                        <span id="m-letter" class="flames-letter">M</span>
-                        <span id="e-letter" class="flames-letter">E</span>
-                        <span id="s-letter" class="flames-letter">S</span>
+                    <div class="flex flex-col items-end mb-4 md:mb-6">
+                        <div id="flames-container" class="flex flex-wrap justify-center gap-2 md:gap-4 select-none">
+                            <span id="f-letter" class="flames-letter">F</span>
+                            <span id="l-letter" class="flames-letter">L</span>
+                            <span id="a-letter" class="flames-letter">A</span>
+                            <span id="m-letter" class="flames-letter">M</span>
+                            <span id="e-letter" class="flames-letter">E</span>
+                            <span id="s-letter" class="flames-letter">S</span>
+                        </div>
+                        <div class="font-marker text-xl md:text-2xl text-yellow drop-shadow-[3px_3px_0_#000] transform tracking-widest mt-1 mr-[-20px] md:mr-[-40px] brand-blip"
+                            style="-webkit-text-stroke: 0.5px #000;">
+                            by dropouthacks.tech</div>
                     </div>
 
                     <!-- The Big Result -->
@@ -1049,7 +1054,7 @@
                     <div id="share-container" class="mb-4 hidden">
                         <button onclick="openSharePreview()"
                             class="btn-comic bg-yellow text-black border-black transform -rotate-1 hover:rotate-0 flex items-center gap-2 mx-auto">
-                            <span>GENERATE SHARE CARD 📸</span>
+                            <span>DOWNLOAD 📸</span>
                         </button>
                     </div>
 
@@ -1199,7 +1204,8 @@
                 <div class="mt-20 text-center border-t-4 border-black/5 pt-10 w-full">
                     <div class="font-mono text-xl text-black/40 uppercase tracking-[0.5em] mb-4">Generated
                         in the Multiverse</div>
-                    <div class="font-bangers text-[4.5rem] text-black tracking-widest">dropouthacks.tech
+                    <div class="font-bangers text-[6rem] text-yellow tracking-widest drop-shadow-[12px_12px_0_#000]"
+                        style="-webkit-text-stroke: 2px black;">by dropouthacks.tech
                     </div>
                 </div>
 
@@ -1358,7 +1364,7 @@
                 osc.type = 'sine';
                 osc.frequency.setValueAtTime(600, now);
                 osc.frequency.exponentialRampToValueAtTime(300, now + 0.05);
-                gain.gain.setValueAtTime(0.03, now); // Much lower volume
+                gain.gain.setValueAtTime(0.15, now); // Increased volume from 0.03
                 gain.gain.linearRampToValueAtTime(0, now + 0.05);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
@@ -1375,7 +1381,7 @@
                 filter.frequency.value = 400;
                 osc.frequency.setValueAtTime(120, now);
                 osc.frequency.linearRampToValueAtTime(40, now + 0.3);
-                gain.gain.setValueAtTime(0.08, now);
+                gain.gain.setValueAtTime(0.3, now); // Increased volume from 0.08
                 gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
                 osc.connect(filter);
                 filter.connect(gain);
@@ -1413,7 +1419,7 @@
                 filter.frequency.value = 1500;
                 osc.frequency.setValueAtTime(800, now);
                 osc.frequency.exponentialRampToValueAtTime(200, now + 0.15);
-                gain.gain.setValueAtTime(0.05, now);
+                gain.gain.setValueAtTime(0.2, now);
                 gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
                 osc.connect(filter);
                 filter.connect(gain);
@@ -1546,8 +1552,8 @@
             const lovePct = calculateLovePercentage(n1, n2);
 
             const descHtml = `
-                <div class="mb-2">
-                    <span class="text-3xl font-bangers text-miles drop-shadow-md">${lovePct}% COMPATIBILITY</span>
+                <div class="mb-1 md:mb-2">
+                    <span class="text-2xl md:text-3xl font-bangers text-miles drop-shadow-md">${lovePct}% COMPATIBILITY</span>
                 </div>
                 ${data.desc}
             `;
